@@ -13,7 +13,3 @@ vim.expandtab = true
 
 -- set numbering
 vim.opt.relativenumber = true
-
--- default leader
-vim.g.mapleader = "<Space>"
-vim.g.maplocalleader = "\\"
