@@ -1,5 +1,3 @@
-vim.g.mapleader = "<Space>"
-
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -13,4 +11,9 @@ vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
 vim.expandtab = true
 
+-- set numbering
 vim.opt.number = true
+
+-- default leader
+vim.g.mapleader = "<Space>"
+vim.g.maplocalleader = "\\"

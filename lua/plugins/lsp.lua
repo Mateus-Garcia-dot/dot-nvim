@@ -22,6 +22,7 @@ local ensure_installed = {
   "tailwindcss",
   "ts_ls",
   "volar",
+  "elixir-ls",
 }
 
 local config = function()
@@ -129,6 +130,11 @@ local config = function()
 
   -- YaML
   lspconfig.yamlls.setup({
+    capabilities = capabilities,
+  })
+
+  -- Elixir
+  lspconfig.elixirls.setup({
     capabilities = capabilities,
   })
 
