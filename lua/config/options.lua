@@ -12,7 +12,7 @@ vim.opt.shiftwidth = 2
 vim.expandtab = true
 
 -- set numbering
-vim.opt.number = true
+vim.opt.relativenumber = true
 
 -- default leader
 vim.g.mapleader = "<Space>"
