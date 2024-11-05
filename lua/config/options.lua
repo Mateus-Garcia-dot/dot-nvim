@@ -13,3 +13,10 @@ vim.expandtab = true
 
 -- set numbering
 vim.opt.relativenumber = true
+
+-- no status bar
+vim.opt.laststatus = 0
+vim.opt.cmdheight = 0
+
+-- force english
+vim.api.nvim_exec("language en_US", true)

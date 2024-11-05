@@ -20,7 +20,7 @@ local ensure_installed = {
   "lua_ls",
   "standardrb",
   "tailwindcss",
-  "ts_ls",
+  -- "ts_ls",
   "volar",
   "elixir-ls",
 }
@@ -93,9 +93,9 @@ local config = function()
   })
 
   -- JavaScript / TypeScript (formatting by Prettier via conform)
-  lspconfig.ts_ls.setup({
-    capabilities = capabilities,
-  })
+  -- lspconfig.ts_ls.setup({
+  --   capabilities = capabilities,
+  -- })
 
   -- Emmet
   lspconfig.emmet_ls.setup({
