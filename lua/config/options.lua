@@ -18,5 +18,8 @@ vim.opt.relativenumber = true
 vim.opt.laststatus = 0
 vim.opt.cmdheight = 0
 
+-- no wrap
+vim.o.wrap = false
+
 -- force english
 vim.api.nvim_exec("language en_US", true)

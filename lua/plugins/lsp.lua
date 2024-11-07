@@ -16,6 +16,7 @@ local ensure_installed = {
   "dockerls",
   "emmet_ls",
   "html",
+  "pylsp",
   "jsonls",
   "lua_ls",
   "standardrb",
@@ -135,6 +136,20 @@ local config = function()
 
   -- Elixir
   lspconfig.elixirls.setup({
+    capabilities = capabilities,
+  })
+
+  -- Docker
+  lspconfig.docker_compose_language_service.setup({
+    capabilities = capabilities,
+  })
+
+  lspconfig.dockerls.setup({
+    capabilities = capabilities,
+  })
+
+  -- Python
+  lspconfig.pylsp.setup({
     capabilities = capabilities,
   })
 
