@@ -152,11 +152,13 @@ local config = function()
   lspconfig.pylsp.setup({
     capabilities = capabilities,
   })
+  
 
   local cmp = require("cmp")
   cmp.setup({
     sources = {
       { name = "nvim_lsp" },
+      { name = "vim-dadbod-completion", priority = 700 }
     },
     mapping = cmp.mapping.preset.insert({
       -- Enter key confirms completion item
