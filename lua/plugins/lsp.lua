@@ -152,7 +152,6 @@ local config = function()
   lspconfig.pylsp.setup({
     capabilities = capabilities,
   })
-  
 
   local cmp = require("cmp")
   cmp.setup({
