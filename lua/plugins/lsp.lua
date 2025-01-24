@@ -122,6 +122,7 @@ local config = function()
   -- Bash
   lspconfig.bashls.setup({
     capabilities = capabilities,
+    filetypes = { 'sh', 'zsh', },
   })
 
   -- Ansible
