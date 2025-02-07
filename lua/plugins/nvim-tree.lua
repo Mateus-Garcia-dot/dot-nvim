@@ -14,6 +14,9 @@ return {
     "nvim-tree/nvim-tree.lua",
     opts = {
       on_attach = on_attach_change,
+      view = {
+        side = "right",
+      },
       actions = {
         open_file = {
           quit_on_open = true,
