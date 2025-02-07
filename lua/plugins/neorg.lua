@@ -1,12 +1,18 @@
 return {
 	{
 		"nvim-neorg/neorg",
-		lazy = false, -- Disable lazy loading as some `lazy.nvim` distributions set `lazy = true` by default
-		version = "*", -- Pin Neorg to the latest stable release
+		lazy = false,
+		version = "*",
 		config = {
 			load = {
 				["core.defaults"] = {},
-				["core.concealer"] = {}, -- We added this line!
+				["core.export"] = {},
+				["core.export.markdown"] = {},
+				["core.concealer"] = {
+					config = {
+						icon_preset = "diamond",
+					},
+				},
 			}
 		},
 	}
