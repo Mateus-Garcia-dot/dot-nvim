@@ -154,6 +154,16 @@ local config = function()
     capabilities = capabilities,
   })
 
+  -- php
+  lspconfig.intelephense.setup({
+    capabilities = capabilities,
+  })
+
+  -- toml
+  lspconfig.taplo.setup({
+    capabilities = capabilities,
+  })
+
   local cmp = require("cmp")
   cmp.setup({
     sources = {
