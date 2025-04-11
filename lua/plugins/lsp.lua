@@ -164,6 +164,11 @@ local config = function()
     capabilities = capabilities,
   })
 
+  -- rust
+  lspconfig.rust_analyzer.setup({
+    capabilities = capabilities,
+  })
+
   local cmp = require("cmp")
   cmp.setup({
     sources = {
