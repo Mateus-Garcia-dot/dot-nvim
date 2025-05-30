@@ -169,6 +169,16 @@ local config = function()
     capabilities = capabilities,
   })
 
+  -- docker compose language service
+  lspconfig.docker_compose_language_service.setup({
+    capabilities = capabilities,
+  })
+
+  -- 
+  lspconfig.dockerls.setup({
+    capabilities = capabilities,
+  })
+
   local cmp = require("cmp")
   cmp.setup({
     sources = {
