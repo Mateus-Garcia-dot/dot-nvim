@@ -10,20 +10,26 @@ local mason_opts = {
 }
 
 local ensure_installed = {
+  "ansiblels",
   "bashls",
   "cssls",
   "docker_compose_language_service",
   "dockerls",
+  "elixirls",
   "emmet_ls",
   "html",
-  "pylsp",
+  "intelephense",
   "jsonls",
   "lua_ls",
+  "marksman",
+  "pylsp",
+  "rust_analyzer",
   "standardrb",
   "tailwindcss",
+  "taplo",
   "ts_ls",
   "volar",
-  "elixir-ls",
+  "yamlls",
 }
 
 local config = function()
@@ -35,25 +41,32 @@ local config = function()
   require("lspconfig.ui.windows").default_options.border = "rounded"
 
   vim.api.nvim_create_autocmd("LspAttach", {
-    desc = "Lsp Actions",
+    desc = "LSP Actions",
     callback = function(event)
-      local opts = { buffer = event.buf }
+      local map = function(keys, func, desc)
+        vim.keymap.set("n", keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
+      end
 
-      -- TODO: Add descriptions for keymaps
-      vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-      vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-      vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-      vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-      vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-      vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-      vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-      vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-      vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-      vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+      -- LSP actions
+      map("K", vim.lsp.buf.hover, "Hover Documentation")
+      map("gd", vim.lsp.buf.definition, "Goto Definition")
+      map("gD", vim.lsp.buf.declaration, "Goto Declaration")
+      map("gi", vim.lsp.buf.implementation, "Goto Implementation")
+      map("go", vim.lsp.buf.type_definition, "Goto Type Definition")
+      map("gr", vim.lsp.buf.references, "Goto References")
+      map("gs", vim.lsp.buf.signature_help, "Signature Help")
+      map("<F2>", vim.lsp.buf.rename, "Rename")
+      map("<F4>", vim.lsp.buf.code_action, "Code Action")
 
-      vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-      vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
-      vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
+      -- Format on both normal and visual modes
+      vim.keymap.set({ "n", "x" }, "<F3>", function()
+        vim.lsp.buf.format({ async = true })
+      end, { buffer = event.buf, desc = "LSP: Format" })
+
+      -- Diagnostics
+      map("gl", vim.diagnostic.open_float, "Show Diagnostics")
+      map("[d", vim.diagnostic.goto_prev, "Previous Diagnostic")
+      map("]d", vim.diagnostic.goto_next, "Next Diagnostic")
     end,
   })
 
@@ -122,7 +135,7 @@ local config = function()
   -- Bash
   lspconfig.bashls.setup({
     capabilities = capabilities,
-    filetypes = { 'sh', 'zsh', },
+    filetypes = { "sh", "zsh" },
   })
 
   -- Ansible
@@ -130,7 +143,7 @@ local config = function()
     capabilities = capabilities,
   })
 
-  -- YaML
+  -- YAML
   lspconfig.yamlls.setup({
     capabilities = capabilities,
   })
@@ -154,28 +167,18 @@ local config = function()
     capabilities = capabilities,
   })
 
-  -- php
+  -- PHP
   lspconfig.intelephense.setup({
     capabilities = capabilities,
   })
 
-  -- toml
+  -- TOML
   lspconfig.taplo.setup({
     capabilities = capabilities,
   })
 
-  -- rust
+  -- Rust
   lspconfig.rust_analyzer.setup({
-    capabilities = capabilities,
-  })
-
-  -- docker compose language service
-  lspconfig.docker_compose_language_service.setup({
-    capabilities = capabilities,
-  })
-
-  -- 
-  lspconfig.dockerls.setup({
     capabilities = capabilities,
   })
 
