@@ -1,10 +1,5 @@
 local mason_opts = {
   ui = {
-    icons = {
-      package_installed = "✓",
-      package_pending = "➜",
-      package_uninstalled = "✗",
-    },
     border = "rounded",
   },
 }
@@ -27,47 +22,57 @@ local ensure_installed = {
 }
 
 local config = function()
-  local lspconfig = require("lspconfig")
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
   local mason = require("mason")
   local mason_lspconfig = require("mason-lspconfig")
 
-  require("lspconfig.ui.windows").default_options.border = "rounded"
-
+  -- Keymaps on LspAttach
   vim.api.nvim_create_autocmd("LspAttach", {
-    desc = "Lsp Actions",
+    desc = "LSP Actions",
     callback = function(event)
       local opts = { buffer = event.buf }
 
-      -- TODO: Add descriptions for keymaps
-      vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-      vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-      vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-      vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-      vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-      vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-      vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-      vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-      vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-      vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-
-      vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-      vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
-      vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+      vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
+      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+      vim.keymap.set("n", "go", vim.lsp.buf.type_definition, opts)
+      vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+      vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, opts)
+      vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
+      vim.keymap.set({ "n", "x" }, "<F3>", function() vim.lsp.buf.format({ async = true }) end, opts)
+      vim.keymap.set("n", "<F4>", vim.lsp.buf.code_action, opts)
+      vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
+      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+      vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
     end,
   })
 
   -- Setup Mason
   mason.setup(mason_opts)
-  mason_lspconfig.setup({ ensure_installed })
+  mason_lspconfig.setup({ ensure_installed = ensure_installed })
 
-  -- Ruby (formatting by StandardRB via autocmds.lua)
-  lspconfig.standardrb.setup({
-    capabilities = capabilities,
-  })
+  -- Define LSP configs
+  vim.lsp.config('standardrb', { capabilities = capabilities })
+  vim.lsp.config('jsonls', { capabilities = capabilities })
+  vim.lsp.config('cssls', { capabilities = capabilities })
+  vim.lsp.config('html', { capabilities = capabilities })
+  vim.lsp.config('ts_ls', { capabilities = capabilities })
+  vim.lsp.config('emmet_ls', { capabilities = capabilities })
+  vim.lsp.config('volar', { capabilities = capabilities })
+  vim.lsp.config('marksman', { capabilities = capabilities })
+  vim.lsp.config('tailwindcss', { capabilities = capabilities })
+  vim.lsp.config('ansiblels', { capabilities = capabilities })
+  vim.lsp.config('yamlls', { capabilities = capabilities })
+  vim.lsp.config('elixirls', { capabilities = capabilities })
+  vim.lsp.config('docker_compose_language_service', { capabilities = capabilities })
+  vim.lsp.config('dockerls', { capabilities = capabilities })
+  vim.lsp.config('pylsp', { capabilities = capabilities })
+  vim.lsp.config('intelephense', { capabilities = capabilities })
+  vim.lsp.config('taplo', { capabilities = capabilities })
+  vim.lsp.config('rust_analyzer', { capabilities = capabilities })
 
-  -- Lua (formatting by Stylua via conform)
-  lspconfig.lua_ls.setup({
+  vim.lsp.config('lua_ls', {
     capabilities = capabilities,
     settings = {
       Lua = {
@@ -78,117 +83,44 @@ local config = function()
     },
   })
 
-  -- JSON (formatting by Prettier via conform)
-  lspconfig.jsonls.setup({
+  vim.lsp.config('bashls', {
     capabilities = capabilities,
+    filetypes = { 'sh', 'zsh' },
   })
 
-  -- CSS
-  lspconfig.cssls.setup({
-    capabilities = capabilities,
+  -- Enable all servers
+  vim.lsp.enable({
+    'standardrb',
+    'lua_ls',
+    'jsonls',
+    'cssls',
+    'html',
+    'ts_ls',
+    'emmet_ls',
+    'volar',
+    'marksman',
+    'tailwindcss',
+    'bashls',
+    'ansiblels',
+    'yamlls',
+    'elixirls',
+    'docker_compose_language_service',
+    'dockerls',
+    'pylsp',
+    'intelephense',
+    'taplo',
+    'rust_analyzer',
   })
 
-  -- HTML
-  lspconfig.html.setup({
-    capabilities = capabilities,
-  })
-
-  -- JavaScript / TypeScript (formatting by Prettier via conform)
-  lspconfig.ts_ls.setup({
-    capabilities = capabilities,
-  })
-
-  -- Emmet
-  lspconfig.emmet_ls.setup({
-    capabilities = capabilities,
-    -- add eruby as filetype
-  })
-
-  -- Vue (formatting by Prettier via conform)
-  lspconfig.volar.setup({
-    capabilities = capabilities,
-  })
-
-  -- Markdown
-  lspconfig.marksman.setup({
-    capabilities = capabilities,
-  })
-
-  -- Tailwind CSS
-  lspconfig.tailwindcss.setup({
-    capabilities = capabilities,
-  })
-
-  -- Bash
-  lspconfig.bashls.setup({
-    capabilities = capabilities,
-    filetypes = { 'sh', 'zsh', },
-  })
-
-  -- Ansible
-  lspconfig.ansiblels.setup({
-    capabilities = capabilities,
-  })
-
-  -- YaML
-  lspconfig.yamlls.setup({
-    capabilities = capabilities,
-  })
-
-  -- Elixir
-  lspconfig.elixirls.setup({
-    capabilities = capabilities,
-  })
-
-  -- Docker
-  lspconfig.docker_compose_language_service.setup({
-    capabilities = capabilities,
-  })
-
-  lspconfig.dockerls.setup({
-    capabilities = capabilities,
-  })
-
-  -- Python
-  lspconfig.pylsp.setup({
-    capabilities = capabilities,
-  })
-
-  -- php
-  lspconfig.intelephense.setup({
-    capabilities = capabilities,
-  })
-
-  -- toml
-  lspconfig.taplo.setup({
-    capabilities = capabilities,
-  })
-
-  -- rust
-  lspconfig.rust_analyzer.setup({
-    capabilities = capabilities,
-  })
-
-  -- docker compose language service
-  lspconfig.docker_compose_language_service.setup({
-    capabilities = capabilities,
-  })
-
-  -- 
-  lspconfig.dockerls.setup({
-    capabilities = capabilities,
-  })
-
+  -- nvim-cmp setup
   local cmp = require("cmp")
   cmp.setup({
     sources = {
       { name = "nvim_lsp" },
-      { name = "vim-dadbod-completion", priority = 700 }
+      { name = "vim-dadbod-completion", priority = 700 },
     },
     mapping = cmp.mapping.preset.insert({
-      -- Enter key confirms completion item
       ["<CR>"] = cmp.mapping.confirm({ select = true }),
-      -- Ctrl + space triggers completion menu
       ["<C-Space>"] = cmp.mapping.complete(),
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
