@@ -1,3 +1,3 @@
 return {
-	{ 'vlime/vlime' },
+  { 'vlime/vlime' },
 }
