@@ -1,11 +1,11 @@
 local function config()
   require('eyeliner').setup({
-      highlight_on_key = false,
-      dim = true,
-      max_length = 9999,
-      disabled_filetypes = {},
-      disabled_buftypes = {},
-      default_keymaps = true,
+    highlight_on_key = false,
+    dim = true,
+    max_length = 9999,
+    disabled_filetypes = {},
+    disabled_buftypes = {},
+    default_keymaps = true,
   })
 
   vim.api.nvim_create_autocmd('ColorScheme', {

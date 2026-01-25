@@ -1,3 +1,3 @@
 return {
-	{ 'echasnovski/mini.comment', version = false },
+  { 'echasnovski/mini.comment', version = false },
 }
