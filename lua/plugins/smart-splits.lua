@@ -1,14 +1,16 @@
 -- Replaces vim-tmux-navigator: same seamless nvim<->tmux pane crossing on
--- <c-hjkl>, plus resizing panes across that same boundary on Ctrl-arrows.
--- Alt isn't available on this keyboard, and Ctrl-Shift-<letter> is
+-- <c-hjkl>, plus resizing panes across that same boundary on
+-- Ctrl-Shift-arrows. Alt isn't available on this keyboard; plain
+-- Ctrl-arrow is claimed by macOS Mission Control (space-switching/App
+-- Exposé) before it ever reaches the terminal; Ctrl-Shift-<letter> is
 -- physically indistinguishable from plain Ctrl-<letter> in most terminals
--- (a control byte doesn't encode Shift) without an extended keyboard
--- protocol (Kitty protocol / xterm modifyOtherKeys) -- Ctrl-arrow avoids
--- both problems since arrow-key modifiers are encoded numerically in the
--- escape sequence itself and are universally supported. Needs matching
--- tmux-side config (dot-tmux's tmux.conf: @plugin
--- 'mrjones2014/smart-splits.nvim' plus the @smart-splits_resize_*_key
--- overrides to match).
+-- (a control byte doesn't encode Shift). Ctrl-Shift-arrow avoids all
+-- three: arrow-key modifiers are encoded numerically in the escape
+-- sequence itself (so Shift really is distinguishable, unlike letters),
+-- it's outside Mission Control's default bindings, and it needs no
+-- terminal config. Needs matching tmux-side config (dot-tmux's
+-- tmux.conf: @plugin 'mrjones2014/smart-splits.nvim' plus the
+-- @smart-splits_resize_*_key overrides to match).
 return {
   "mrjones2014/smart-splits.nvim",
   -- must not be lazy-loaded: it sets a tmux variable on startup
@@ -27,10 +29,10 @@ return {
     set("n", "<c-l>", s.move_cursor_right)
     set("n", "<c-\\>", s.move_cursor_previous)
 
-    set("n", "<C-Left>", s.resize_left)
-    set("n", "<C-Down>", s.resize_down)
-    set("n", "<C-Up>", s.resize_up)
-    set("n", "<C-Right>", s.resize_right)
+    set("n", "<C-S-Left>", s.resize_left)
+    set("n", "<C-S-Down>", s.resize_down)
+    set("n", "<C-S-Up>", s.resize_up)
+    set("n", "<C-S-Right>", s.resize_right)
 
     -- smart-splits doesn't handle terminal buffers itself (normal mode
     -- only); escape terminal-mode first, then call the same function.
