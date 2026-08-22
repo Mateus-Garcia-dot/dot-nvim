@@ -10,3 +10,8 @@ autocmd("TextYankPost", {
 })
 
 vim.cmd.colorscheme('tokyonight-night')
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "gitcommit", "norg", "text" },
+  callback = function() vim.opt_local.spell = true end,
+})

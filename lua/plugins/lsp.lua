@@ -53,6 +53,19 @@ local config = function()
       vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
       vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
       vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+
+      -- <leader>l mirror of the keys above, for eglot-style muscle memory
+      vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, opts)
+      vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, opts)
+      vim.keymap.set("n", "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, opts)
+      vim.keymap.set("n", "<leader>ld", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
+      vim.keymap.set("n", "<leader>le", vim.diagnostic.open_float, opts)
+      vim.keymap.set("n", "<leader>lh", vim.lsp.buf.hover, opts)
+      vim.keymap.set("n", "<leader>lgd", vim.lsp.buf.definition, opts)
+      vim.keymap.set("n", "<leader>lgD", vim.lsp.buf.declaration, opts)
+      vim.keymap.set("n", "<leader>lgi", vim.lsp.buf.implementation, opts)
+      vim.keymap.set("n", "<leader>lgy", vim.lsp.buf.type_definition, opts)
+      vim.keymap.set("n", "<leader>lgr", vim.lsp.buf.references, opts)
     end,
   })
 
