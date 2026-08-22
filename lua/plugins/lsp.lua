@@ -89,7 +89,7 @@ local config = function()
   vim.lsp.config('docker_compose_language_service', { capabilities = capabilities })
   vim.lsp.config('dockerls', { capabilities = capabilities })
   vim.lsp.config('pylsp', { capabilities = capabilities })
-  vim.lsp.config('intelephense', { capabilities = capabilities })
+  vim.lsp.config('phpactor', { capabilities = capabilities })
   vim.lsp.config('taplo', { capabilities = capabilities })
   vim.lsp.config('rust_analyzer', { capabilities = capabilities })
 
@@ -121,7 +121,7 @@ local config = function()
     'ansiblels',
     'yamlls',
     'elixirls',
-    'intelephense',
+    'phpactor',
     'taplo',
     'rust_analyzer',
   })
