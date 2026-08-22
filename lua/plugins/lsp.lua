@@ -23,6 +23,14 @@ local ensure_installed = {
 
 local config = function()
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
+  -- macOS has no FSEvents backend in libuv's file-watcher, so nvim falls back
+  -- to kqueue, which needs one fd per watched directory and doesn't recurse.
+  -- Big repos (e.g. a large monorepo, ~25k dirs) blow past the fd limit, which can
+  -- crash servers that request dynamic didChangeWatchedFiles registration
+  -- (intelephense notably). Tell servers up front we don't support it, same
+  -- workaround as core-lsp.el on the Emacs side.
+  capabilities.workspace = capabilities.workspace or {}
+  capabilities.workspace.didChangeWatchedFiles = { dynamicRegistration = false }
   local mason = require("mason")
   local mason_lspconfig = require("mason-lspconfig")
 
@@ -88,25 +96,18 @@ local config = function()
     filetypes = { 'sh', 'zsh' },
   })
 
-  -- Enable all servers
+  -- mason-lspconfig's `automatic_enable` (on by default) already calls
+  -- vim.lsp.enable() for anything actually installed via Mason (currently
+  -- bashls, cssls, docker_compose_language_service, dockerls, emmet_ls,
+  -- html, jsonls, lua_ls, tailwindcss, ts_ls, pylsp). Only enable the
+  -- servers here that are NOT Mason-managed on this machine.
   vim.lsp.enable({
     'standardrb',
-    'lua_ls',
-    'jsonls',
-    'cssls',
-    'html',
-    'ts_ls',
-    'emmet_ls',
     'volar',
     'marksman',
-    'tailwindcss',
-    'bashls',
     'ansiblels',
     'yamlls',
     'elixirls',
-    'docker_compose_language_service',
-    'dockerls',
-    'pylsp',
     'intelephense',
     'taplo',
     'rust_analyzer',

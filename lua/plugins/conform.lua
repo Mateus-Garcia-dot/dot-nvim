@@ -8,22 +8,22 @@ local config = function()
       typescript = { "prettierd", "eslint_d" },
       javascriptreact = { "prettierd" },
       typescriptreact = { "prettierd" },
-      -- python = { "black" },
+      python = { "ruff_fix", "ruff_format" },
       json = { "prettierd" },
       vue = { "prettierd", "eslint_d" },
       lua = { "stylua" },
-      markdown = { "markdownlint" },
+      markdown = { "markdownlint-cli2" },
       fish = { "fish_indent" },
       sh = { "shfmt" },
       yaml = { "yamlfmt" },
       -- ruby = { "standardrb" }, --currently broken, see autocmds.lua for workaround
     },
 
-    -- format_on_save = {
-    --   lsp_fallback = true,
-    --   async = false,
-    --   timeout_ms = 500,
-    -- },
+    format_on_save = {
+      lsp_fallback = true,
+      async = false,
+      timeout_ms = 500,
+    },
   })
   vim.api.nvim_create_user_command("Format", function(args)
     local range = nil
