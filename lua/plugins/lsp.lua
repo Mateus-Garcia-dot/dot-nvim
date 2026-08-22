@@ -126,12 +126,20 @@ local config = function()
     'rust_analyzer',
   })
 
+  -- load friendly-snippets into luasnip
+  require("luasnip.loaders.from_vscode").lazy_load()
+
   -- nvim-cmp setup
   local cmp = require("cmp")
+  local lspkind = require("lspkind")
   cmp.setup({
     sources = {
       { name = "nvim_lsp" },
+      { name = "luasnip" },
       { name = "vim-dadbod-completion", priority = 700 },
+    },
+    formatting = {
+      format = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 }),
     },
     mapping = cmp.mapping.preset.insert({
       ["<CR>"] = cmp.mapping.confirm({ select = true }),
@@ -168,6 +176,9 @@ return {
       "hrsh7th/nvim-cmp",
       "hrsh7th/cmp-nvim-lsp",
       "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+      "rafamadriz/friendly-snippets",
+      "onsails/lspkind.nvim",
     },
     lazy = false,
     config = config,
