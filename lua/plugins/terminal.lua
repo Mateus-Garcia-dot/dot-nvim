@@ -6,7 +6,7 @@ return {
   version = "*",
   cmd = { "ToggleTerm", "TermExec" },
   keys = {
-    { "<leader>Tt", "<cmd>ToggleTerm direction=float<cr>", desc = "Toggle terminal" },
+    { "<leader>Tt", "<cmd>ToggleTerm direction=float<cr>", desc = "Toggle terminal", mode = { "n", "v" } },
     {
       "<leader>Tn",
       function()
@@ -14,6 +14,7 @@ return {
         vim.cmd(terminal_count .. "ToggleTerm direction=float")
       end,
       desc = "New terminal",
+      mode = { "n", "v" },
     },
   },
   opts = {

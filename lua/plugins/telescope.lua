@@ -4,31 +4,31 @@ local config = function()
   require("telescope").setup({})
   local builtin = require("telescope.builtin")
 
-  vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
-  vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
-  vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
-  vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
+  vim.keymap.set({ "n", "v" }, "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+  vim.keymap.set({ "n", "v" }, "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+  vim.keymap.set({ "n", "v" }, "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+  vim.keymap.set({ "n", "v" }, "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
 
   -- top-level "/" like emacs' unprefixed project ripgrep search
-  vim.keymap.set("n", "<leader>/", function()
+  vim.keymap.set({ "n", "v" }, "<leader>/", function()
     builtin.live_grep({ cwd = project_root() })
   end, { desc = "Search project" })
 
   -- M-x equivalent
-  vim.keymap.set("n", "<leader><leader>", builtin.commands, { desc = "Commands" })
+  vim.keymap.set({ "n", "v" }, "<leader><leader>", builtin.commands, { desc = "Commands" })
 
   -- projectile-switch-project equivalent, backed by project.nvim's history
-  vim.keymap.set("n", "<leader>pp", "<cmd>Telescope projects<cr>", { desc = "Switch project" })
+  vim.keymap.set({ "n", "v" }, "<leader>pp", "<cmd>Telescope projects<cr>", { desc = "Switch project" })
 
-  vim.keymap.set("n", "<leader>pf", function()
+  vim.keymap.set({ "n", "v" }, "<leader>pf", function()
     builtin.find_files({ cwd = project_root() })
   end, { desc = "Find file in project" })
 
-  vim.keymap.set("n", "<leader>pb", function()
+  vim.keymap.set({ "n", "v" }, "<leader>pb", function()
     builtin.buffers({ cwd = project_root(), cwd_only = true })
   end, { desc = "Switch buffer in project" })
 
-  vim.keymap.set("n", "<leader>pk", function()
+  vim.keymap.set({ "n", "v" }, "<leader>pk", function()
     local root = project_root()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
       local name = vim.api.nvim_buf_get_name(buf)

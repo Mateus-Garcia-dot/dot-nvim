@@ -20,9 +20,10 @@ return {
           return "<Ignore>"
         end, "Prev hunk")
 
-        map("n", "<leader>gp", gs.preview_hunk, "Preview hunk")
-        map("n", "<leader>gr", gs.reset_hunk, "Reset hunk")
-        map("n", "<leader>gb", function() gs.blame_line({ full = true }) end, "Blame line")
+        map({ "n", "v" }, "<leader>gp", gs.preview_hunk, "Preview hunk")
+        -- visual mode resets just the selected lines' hunks, per gitsigns
+        map({ "n", "v" }, "<leader>gr", gs.reset_hunk, "Reset hunk")
+        map({ "n", "v" }, "<leader>gb", function() gs.blame_line({ full = true }) end, "Blame line")
       end,
     },
   },
@@ -32,7 +33,7 @@ return {
     dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim" },
     cmd = "Neogit",
     keys = {
-      { "<leader>gs", "<cmd>Neogit<cr>", desc = "Git status" },
+      { "<leader>gs", "<cmd>Neogit<cr>", desc = "Git status", mode = { "n", "v" } },
     },
     config = true,
   },

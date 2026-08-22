@@ -8,31 +8,37 @@ return {
         "<leader>xx",
         "<cmd>Trouble diagnostics toggle<cr>",
         desc = "Diagnostics (Trouble)",
+        mode = { "n", "v" },
       },
       {
         "<leader>xX",
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Buffer Diagnostics (Trouble)",
+        mode = { "n", "v" },
       },
       {
         "<leader>cs",
         "<cmd>Trouble symbols toggle focus=false<cr>",
         desc = "Symbols (Trouble)",
+        mode = { "n", "v" },
       },
       {
         "<leader>cl",
         "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
         desc = "LSP Definitions / references / ... (Trouble)",
+        mode = { "n", "v" },
       },
       {
         "<leader>xL",
         "<cmd>Trouble loclist toggle<cr>",
         desc = "Location List (Trouble)",
+        mode = { "n", "v" },
       },
       {
         "<leader>xQ",
         "<cmd>Trouble qflist toggle<cr>",
         desc = "Quickfix List (Trouble)",
+        mode = { "n", "v" },
       },
     },
   }

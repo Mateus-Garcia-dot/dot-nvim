@@ -26,4 +26,4 @@ local function toggle_test()
   })
 end
 
-vim.keymap.set("n", "<leader>pt", toggle_test, { buffer = true, desc = "Toggle class/test" })
+vim.keymap.set({ "n", "v" }, "<leader>pt", toggle_test, { buffer = true, desc = "Toggle class/test" })

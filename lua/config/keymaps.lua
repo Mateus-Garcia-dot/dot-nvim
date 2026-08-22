@@ -1,27 +1,26 @@
 local set = vim.keymap.set
 local project_root = require("config.project").root
 
-set('n', '+', '"+', { silent = true })
-set('v', '+', '"+', { silent = true })
+set({ 'n', 'v' }, '+', '"+', { silent = true })
 
-set('n', '<leader>ss', 'z=', { desc = "Correct spelling" })
+set({ 'n', 'v' }, '<leader>ss', 'z=', { desc = "Correct spelling" })
 
 -- windows (windmove equivalent; ace-delete-window is in plugins/window-picker.lua)
-set('n', '<leader>wh', '<C-w>h', { desc = "Window left" })
-set('n', '<leader>wj', '<C-w>j', { desc = "Window down" })
-set('n', '<leader>wk', '<C-w>k', { desc = "Window up" })
-set('n', '<leader>wl', '<C-w>l', { desc = "Window right" })
-set('n', '<leader>w/', '<C-w>v', { desc = "Split right" })
-set('n', '<leader>w-', '<C-w>s', { desc = "Split below" })
-set('n', '<leader>wd', '<C-w>c', { desc = "Delete window" })
+set({ 'n', 'v' }, '<leader>wh', '<C-w>h', { desc = "Window left" })
+set({ 'n', 'v' }, '<leader>wj', '<C-w>j', { desc = "Window down" })
+set({ 'n', 'v' }, '<leader>wk', '<C-w>k', { desc = "Window up" })
+set({ 'n', 'v' }, '<leader>wl', '<C-w>l', { desc = "Window right" })
+set({ 'n', 'v' }, '<leader>w/', '<C-w>v', { desc = "Split right" })
+set({ 'n', 'v' }, '<leader>w-', '<C-w>s', { desc = "Split below" })
+set({ 'n', 'v' }, '<leader>wd', '<C-w>c', { desc = "Delete window" })
 
 -- dired-jump equivalent: Oil at the current file's directory, not cwd
-set('n', '<leader>fj', function()
+set({ 'n', 'v' }, '<leader>fj', function()
   require("oil").open(vim.fn.expand("%:p:h"))
 end, { desc = "Jump to file's directory" })
 
 -- shell-command equivalents
-set('n', '<leader>!!', function()
+set({ 'n', 'v' }, '<leader>!!', function()
   vim.ui.input({ prompt = "Run in root: " }, function(cmd)
     if cmd and cmd ~= "" then
       vim.cmd(("TermExec cmd=%s dir=%s"):format(vim.fn.shellescape(cmd), vim.fn.shellescape(project_root())))
@@ -29,7 +28,7 @@ set('n', '<leader>!!', function()
   end)
 end, { desc = "Run shell command in project root" })
 
-set('n', '<leader>!.', function()
+set({ 'n', 'v' }, '<leader>!.', function()
   vim.ui.input({ prompt = "$ " }, function(cmd)
     if cmd and cmd ~= "" then
       vim.cmd("!" .. cmd)
@@ -38,18 +37,18 @@ set('n', '<leader>!.', function()
 end, { desc = "Run shell command here" })
 
 -- org-present equivalent
-set('n', '<leader>op', "<cmd>Neorg presenter start<cr>", { desc = "Present" })
+set({ 'n', 'v' }, '<leader>op', "<cmd>Neorg presenter start<cr>", { desc = "Present" })
 
 -- save-buffers-kill-emacs equivalent (confirms before discarding unsaved buffers)
-set('n', '<leader>qq', "<cmd>confirm qa<cr>", { desc = "Quit" })
+set({ 'n', 'v' }, '<leader>qq', "<cmd>confirm qa<cr>", { desc = "Quit" })
 
 -- tmux/Spacemacs-layout style numbered workspaces, backed by tabpages.
-set('n', '<leader>lc', '<cmd>tabnew<cr>', { desc = "New workspace" })
+set({ 'n', 'v' }, '<leader>lc', '<cmd>tabnew<cr>', { desc = "New workspace" })
 
 -- Switches if workspace N exists; no-op otherwise (matches tmux: it
 -- doesn't create window N just because you pressed its number).
 for i = 1, 9 do
-  set('n', '<leader>l' .. i, function()
+  set({ 'n', 'v' }, '<leader>l' .. i, function()
     if i <= vim.fn.tabpagenr('$') then
       vim.cmd(i .. 'tabnext')
     end

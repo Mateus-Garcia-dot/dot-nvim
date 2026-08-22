@@ -16,14 +16,14 @@ return {
     require("config.dap-php").setup()
   end,
   keys = {
-    { "<leader>dd", function() require("dap").continue() end, desc = "Start/continue" },
-    { "<leader>dq", function() require("dap").terminate() end, desc = "Stop" },
-    { "<leader>dc", function() require("dap").continue() end, desc = "Continue" },
-    { "<leader>dn", function() require("dap").step_over() end, desc = "Step over" },
-    { "<leader>di", function() require("dap").step_into() end, desc = "Step in" },
-    { "<leader>do", function() require("dap").step_out() end, desc = "Step out" },
-    { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Breakpoint" },
-    { "<leader>dB", function() require("dapui").toggle() end, desc = "Breakpoints/UI" },
-    { "<leader>dr", function() require("dap").restart() end, desc = "Restart" },
+    { "<leader>dd", function() require("dap").continue() end, desc = "Start/continue", mode = { "n", "v" } },
+    { "<leader>dq", function() require("dap").terminate() end, desc = "Stop", mode = { "n", "v" } },
+    { "<leader>dc", function() require("dap").continue() end, desc = "Continue", mode = { "n", "v" } },
+    { "<leader>dn", function() require("dap").step_over() end, desc = "Step over", mode = { "n", "v" } },
+    { "<leader>di", function() require("dap").step_into() end, desc = "Step in", mode = { "n", "v" } },
+    { "<leader>do", function() require("dap").step_out() end, desc = "Step out", mode = { "n", "v" } },
+    { "<leader>db", function() require("dap").toggle_breakpoint() end, desc = "Breakpoint", mode = { "n", "v" } },
+    { "<leader>dB", function() require("dapui").toggle() end, desc = "Breakpoints/UI", mode = { "n", "v" } },
+    { "<leader>dr", function() require("dap").restart() end, desc = "Restart", mode = { "n", "v" } },
   },
 }

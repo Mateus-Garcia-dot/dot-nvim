@@ -12,6 +12,7 @@ return {
         end
       end,
       desc = "Ace delete window",
+      mode = { "n", "v" },
     },
   },
   opts = {
