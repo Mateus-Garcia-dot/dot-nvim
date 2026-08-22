@@ -17,6 +17,9 @@ local config = function()
   -- M-x equivalent
   vim.keymap.set("n", "<leader><leader>", builtin.commands, { desc = "Commands" })
 
+  -- projectile-switch-project equivalent, backed by project.nvim's history
+  vim.keymap.set("n", "<leader>pp", "<cmd>Telescope projects<cr>", { desc = "Switch project" })
+
   vim.keymap.set("n", "<leader>pf", function()
     builtin.find_files({ cwd = project_root() })
   end, { desc = "Find file in project" })

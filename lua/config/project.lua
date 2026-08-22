@@ -1,8 +1,10 @@
--- Shared project-root helper (projectile-root equivalent).
+-- Shared project-root helper, backed by project.nvim's detection
+-- (pattern/lsp based) instead of a bare .git lookup.
 local M = {}
 
 function M.root()
-  return vim.fs.root(0, ".git") or vim.uv.cwd()
+  local root = require("project_nvim.project").get_project_root()
+  return root or vim.uv.cwd()
 end
 
 return M
