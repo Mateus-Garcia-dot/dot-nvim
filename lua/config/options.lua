@@ -21,6 +21,10 @@ vim.opt.cmdheight = 0
 -- no wrap
 vim.o.wrap = false
 
+-- rounded border on every floating window (hover, signature help, code
+-- action menu, ...) that doesn't explicitly set its own
+vim.o.winborder = "rounded"
+
 -- spellcheck (enabled per filetype in autocmds.lua, off by default in code)
 vim.opt.spelllang = "en_us"
 vim.opt.spelloptions = "camel"
