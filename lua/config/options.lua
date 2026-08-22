@@ -9,7 +9,7 @@ vim.opt.termguicolors = true
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
-vim.expandtab = true
+vim.opt.expandtab = true
 
 -- set numbering
 vim.opt.relativenumber = true
@@ -22,4 +22,4 @@ vim.opt.cmdheight = 0
 vim.o.wrap = false
 
 -- force english
-vim.api.nvim_exec("language en_US", true)
+vim.cmd.language("en_US")
