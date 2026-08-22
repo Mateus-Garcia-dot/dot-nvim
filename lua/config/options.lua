@@ -14,6 +14,10 @@ vim.opt.expandtab = true
 -- set numbering
 vim.opt.relativenumber = true
 
+-- always reserve one signcolumn (diagnostics, gitsigns) so text doesn't
+-- jump sideways when a sign appears/disappears
+vim.opt.signcolumn = "yes"
+
 -- no status bar
 vim.opt.laststatus = 0
 vim.opt.cmdheight = 0
