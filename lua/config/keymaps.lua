@@ -6,7 +6,7 @@ set('v', '+', '"+', { silent = true })
 
 set('n', '<leader>ss', 'z=', { desc = "Correct spelling" })
 
--- windows (windmove equivalent; ace-delete-window has no nvim analog)
+-- windows (windmove equivalent; ace-delete-window is in plugins/window-picker.lua)
 set('n', '<leader>wh', '<C-w>h', { desc = "Window left" })
 set('n', '<leader>wj', '<C-w>j', { desc = "Window down" })
 set('n', '<leader>wk', '<C-w>k', { desc = "Window up" })
