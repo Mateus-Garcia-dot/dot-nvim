@@ -16,11 +16,13 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function() vim.opt_local.spell = true end,
 })
 
--- filename winbar only for real, plain file buffers -- not oil (buftype
+-- filename statusline only for real, plain file buffers -- not oil (buftype
 -- acwrite), neogit/diffview (nofile), terminal, telescope (prompt),
 -- quickfix, help, etc.
 vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "TermOpen", "BufEnter" }, {
   callback = function(args)
-    vim.wo.winbar = vim.bo[args.buf].buftype == "" and "%f" or ""
+    -- statusline = "" means "use nvim's default format", not "show
+    -- nothing" -- a single space is what actually renders blank.
+    vim.wo.statusline = vim.bo[args.buf].buftype == "" and "%f" or " "
   end,
 })

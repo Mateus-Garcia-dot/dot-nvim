@@ -18,15 +18,13 @@ vim.opt.relativenumber = true
 -- jump sideways when a sign appears/disappears
 vim.opt.signcolumn = "yes"
 
--- no status bar
-vim.opt.laststatus = 0
+-- per-window statusline (just the filename -- set per-buftype in
+-- autocmds.lua) instead of a single global one
+vim.opt.laststatus = 2
 vim.opt.cmdheight = 0
 
 -- no wrap
 vim.o.wrap = false
-
--- winbar (file path above the buffer) is set per-buffer in autocmds.lua --
--- only real file buffers get one, not oil/neogit/terminal/etc.
 
 -- rounded border on every floating window (hover, signature help, code
 -- action menu, ...) that doesn't explicitly set its own
