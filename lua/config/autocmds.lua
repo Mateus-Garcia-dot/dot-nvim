@@ -15,3 +15,12 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "gitcommit", "norg", "text" },
   callback = function() vim.opt_local.spell = true end,
 })
+
+-- filename winbar only for real, plain file buffers -- not oil (buftype
+-- acwrite), neogit/diffview (nofile), terminal, telescope (prompt),
+-- quickfix, help, etc.
+vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType", "TermOpen", "BufEnter" }, {
+  callback = function(args)
+    vim.wo.winbar = vim.bo[args.buf].buftype == "" and "%f" or ""
+  end,
+})

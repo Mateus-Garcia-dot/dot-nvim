@@ -25,6 +25,9 @@ vim.opt.cmdheight = 0
 -- no wrap
 vim.o.wrap = false
 
+-- winbar (file path above the buffer) is set per-buffer in autocmds.lua --
+-- only real file buffers get one, not oil/neogit/terminal/etc.
+
 -- rounded border on every floating window (hover, signature help, code
 -- action menu, ...) that doesn't explicitly set its own
 vim.o.winborder = "rounded"
