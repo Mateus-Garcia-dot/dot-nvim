@@ -42,3 +42,16 @@ set('n', '<leader>op', "<cmd>Neorg presenter start<cr>", { desc = "Present" })
 
 -- save-buffers-kill-emacs equivalent (confirms before discarding unsaved buffers)
 set('n', '<leader>qq', "<cmd>confirm qa<cr>", { desc = "Quit" })
+
+-- tmux/Spacemacs-layout style numbered workspaces, backed by tabpages.
+set('n', '<leader>lc', '<cmd>tabnew<cr>', { desc = "New workspace" })
+
+-- Switches if workspace N exists; no-op otherwise (matches tmux: it
+-- doesn't create window N just because you pressed its number).
+for i = 1, 9 do
+  set('n', '<leader>l' .. i, function()
+    if i <= vim.fn.tabpagenr('$') then
+      vim.cmd(i .. 'tabnext')
+    end
+  end, { desc = "Workspace " .. i })
+end

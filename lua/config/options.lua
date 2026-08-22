@@ -26,6 +26,10 @@ vim.opt.cmdheight = 0
 -- no wrap
 vim.o.wrap = false
 
+-- never show the native tabline (defaults to appearing once there are 2+
+-- tabs); workspaces are switched via <leader>l1..9, no visible tab bar
+vim.o.showtabline = 0
+
 -- rounded border on every floating window (hover, signature help, code
 -- action menu, ...) that doesn't explicitly set its own
 vim.o.winborder = "rounded"
