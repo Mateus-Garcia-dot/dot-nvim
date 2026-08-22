@@ -24,11 +24,8 @@ local ensure_installed = {
 local config = function()
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-  -- Back workspace/didChangeWatchedFiles with Watchman instead of nvim's
-  -- built-in libuv watcher: Watchman keeps a persistent, indexed daemon per
-  -- tree, which scales to large repos much better than a single recursive
-  -- fs_event. Falls back to nvim's default (capability left disabled) when
-  -- watchman isn't installed.
+  -- Watchman scales to large repos better than libuv's recursive fs_event;
+  -- falls back to nvim's default (capability disabled) if not installed.
   local watchman_available = vim.fn.executable("watchman-wait") == 1
   if watchman_available then
     local watchfiles = require("vim.lsp._watchfiles")
@@ -91,7 +88,6 @@ local config = function()
   local mason = require("mason")
   local mason_lspconfig = require("mason-lspconfig")
 
-  -- Keymaps on LspAttach
   vim.api.nvim_create_autocmd("LspAttach", {
     desc = "LSP Actions",
     callback = function(event)
@@ -126,11 +122,9 @@ local config = function()
     end,
   })
 
-  -- Setup Mason
   mason.setup(mason_opts)
   mason_lspconfig.setup({ ensure_installed = ensure_installed })
 
-  -- Define LSP configs
   vim.lsp.config('standardrb', { capabilities = capabilities })
   vim.lsp.config('jsonls', { capabilities = capabilities })
   vim.lsp.config('cssls', { capabilities = capabilities })
@@ -183,10 +177,8 @@ local config = function()
     'rust_analyzer',
   })
 
-  -- load friendly-snippets into luasnip
   require("luasnip.loaders.from_vscode").lazy_load()
 
-  -- nvim-cmp setup
   local cmp = require("cmp")
   local lspkind = require("lspkind")
   cmp.setup({

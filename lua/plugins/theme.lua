@@ -2,9 +2,6 @@ local on_highlights = function (h1, c)
   h1.TelescopeNormal = {
     fg = c.fg_dark,
   }
-  h1.TelescopeBorder = {
-    fg = c.bg_dark,
-  }
   vim.api.nvim_set_hl(0, "TelescopeNormal", { bg="none" })
 end
 

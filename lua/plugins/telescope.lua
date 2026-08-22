@@ -1,7 +1,13 @@
 local project_root = require("config.project").root
 
 local config = function()
-  require("telescope").setup({})
+  require("telescope").setup({
+    defaults = {
+      -- non-boolean value skips telescope's override that drops the
+      -- results/preview windows' bottom border
+      border = { 1, 1, 1, 1 },
+    },
+  })
   local builtin = require("telescope.builtin")
 
   vim.keymap.set({ "n", "v" }, "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
