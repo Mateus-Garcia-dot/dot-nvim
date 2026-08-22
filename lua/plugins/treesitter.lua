@@ -19,6 +19,7 @@ return {
         indent = { enable = true },
       })
       vim.treesitter.language.register("bash", "zsh")
+      require("config.treesitter-query-fix").apply()
     end,
   },
 }
