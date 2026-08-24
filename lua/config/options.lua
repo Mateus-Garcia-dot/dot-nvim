@@ -41,3 +41,9 @@ vim.opt.spell = false
 
 -- force english
 vim.cmd.language("en_US")
+
+-- allow per-project local config (.nvim.lua / .nvimrc / .exrc), trust-prompted
+-- on first read via vim.secure -- lets project-local files (kept out of git,
+-- see dot-emacs' equivalent .dir-locals.el convention) register DAP configs,
+-- test runners, etc. without touching this shared config.
+vim.o.exrc = true
