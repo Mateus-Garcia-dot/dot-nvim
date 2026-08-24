@@ -18,12 +18,6 @@ local config = function()
       yaml = { "yamlfmt" },
       -- ruby = { "standardrb" }, --currently broken, see autocmds.lua for workaround
     },
-
-    format_on_save = {
-      lsp_fallback = true,
-      async = false,
-      timeout_ms = 500,
-    },
   })
   vim.api.nvim_create_user_command("Format", function(args)
     local range = nil
@@ -41,7 +35,6 @@ end
 return {
   "stevearc/conform.nvim",
   enabled = true,
-  event = { "BufWritePre" },
   config = config,
-  cmd = { "ConformInfo" },
+  cmd = { "ConformInfo", "Format" },
 }
