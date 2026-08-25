@@ -23,6 +23,7 @@ local ensure_installed = {
 
 local config = function()
   local capabilities = require("cmp_nvim_lsp").default_capabilities()
+  local telescope_builtin = require("telescope.builtin")
 
   -- Watchman scales to large repos better than libuv's recursive fs_event;
   -- falls back to nvim's default (capability disabled) if not installed.
@@ -88,17 +89,26 @@ local config = function()
   local mason = require("mason")
   local mason_lspconfig = require("mason-lspconfig")
 
+  -- nvim-lspconfig stopped defining these once nvim's native `:lsp` command
+  -- appeared, assuming it covered the same ground -- but `:lsp` only has
+  -- enable/disable/restart/stop, no log viewer. Restore the shortcuts.
+  vim.api.nvim_create_user_command("LspLog", function()
+    vim.cmd("tabnew " .. vim.lsp.log.get_filename())
+  end, { desc = "Opens the Nvim LSP client log." })
+
+  vim.api.nvim_create_user_command("LspInfo", ":checkhealth vim.lsp", { desc = "Alias to `:checkhealth vim.lsp`" })
+
   vim.api.nvim_create_autocmd("LspAttach", {
     desc = "LSP Actions",
     callback = function(event)
       local opts = { buffer = event.buf }
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+      vim.keymap.set("n", "gd", telescope_builtin.lsp_definitions, opts)
       vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-      vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-      vim.keymap.set("n", "go", vim.lsp.buf.type_definition, opts)
-      vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+      vim.keymap.set("n", "gi", telescope_builtin.lsp_implementations, opts)
+      vim.keymap.set("n", "go", telescope_builtin.lsp_type_definitions, opts)
+      vim.keymap.set("n", "gr", telescope_builtin.lsp_references, opts)
       vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, opts)
       vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
       vim.keymap.set({ "n", "x" }, "<F3>", function() vim.lsp.buf.format({ async = true }) end, opts)
@@ -114,11 +124,11 @@ local config = function()
       vim.keymap.set({ "n", "v" }, "<leader>ld", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
       vim.keymap.set({ "n", "v" }, "<leader>le", vim.diagnostic.open_float, opts)
       vim.keymap.set({ "n", "v" }, "<leader>lh", vim.lsp.buf.hover, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgd", vim.lsp.buf.definition, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgd", telescope_builtin.lsp_definitions, opts)
       vim.keymap.set({ "n", "v" }, "<leader>lgD", vim.lsp.buf.declaration, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgi", vim.lsp.buf.implementation, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgy", vim.lsp.buf.type_definition, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgr", vim.lsp.buf.references, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgi", telescope_builtin.lsp_implementations, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgy", telescope_builtin.lsp_type_definitions, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgr", telescope_builtin.lsp_references, opts)
     end,
   })
 
@@ -228,6 +238,7 @@ return {
       "saadparwaiz1/cmp_luasnip",
       "rafamadriz/friendly-snippets",
       "onsails/lspkind.nvim",
+      "nvim-telescope/telescope.nvim",
     },
     lazy = false,
     config = config,

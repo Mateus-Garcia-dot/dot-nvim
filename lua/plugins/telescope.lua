@@ -48,7 +48,9 @@ end
 return {
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.8",
+    -- no tags cut since 2024; master is what's actually maintained, and
+    -- fixes the "Invalid window id" crash from 0.1.8's LSP jump handler
+    -- being incompatible with neovim 0.12's show_document changes
     config = config,
     dependencies = { "nvim-lua/plenary.nvim" },
   },
