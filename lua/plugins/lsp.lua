@@ -88,6 +88,8 @@ local config = function()
 
   local mason = require("mason")
   local mason_lspconfig = require("mason-lspconfig")
+  -- module names stay "mason"/"mason-lspconfig" regardless of the org the
+  -- repo lives under -- only the plugin spec source needed updating
 
   -- nvim-lspconfig stopped defining these once nvim's native `:lsp` command
   -- appeared, assuming it covered the same ground -- but `:lsp` only has
@@ -228,9 +230,11 @@ end
 
 return {
   {
-    "williamboman/mason.nvim",
+    -- williamboman/mason.nvim redirects here; the project transferred to the
+    -- mason-org GitHub org.
+    "mason-org/mason.nvim",
     dependencies = {
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason-lspconfig.nvim",
       "neovim/nvim-lspconfig",
       "hrsh7th/nvim-cmp",
       "hrsh7th/cmp-nvim-lsp",
