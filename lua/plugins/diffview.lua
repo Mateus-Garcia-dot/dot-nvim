@@ -1,6 +1,8 @@
 return {
   {
-    "sindrets/diffview.nvim",
+    -- sindrets/diffview.nvim has had no commits since 2024; this fork is
+    -- actively maintained and stays API-compatible (same `diffview` module).
+    "dlyongemallo/diffview.nvim",
     opts = function()
       local actions = require("diffview.actions")
       return {

@@ -30,7 +30,7 @@ return {
   {
     -- magit-status equivalent
     "NeogitOrg/neogit",
-    dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim" },
+    dependencies = { "nvim-lua/plenary.nvim", "dlyongemallo/diffview.nvim" },
     cmd = "Neogit",
     keys = {
       { "<leader>gs", "<cmd>Neogit<cr>", desc = "Git status", mode = { "n", "v" } },
