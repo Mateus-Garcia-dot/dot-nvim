@@ -53,6 +53,13 @@ return {
     -- explicitly instead of relying on lazy-lock.json alone.
     branch = "master",
     build = ":TSUpdate",
+    dependencies = {
+      -- Same master/main split as nvim-treesitter itself, and for the same
+      -- reason: textobjects' "main" targets the nvim-treesitter rewrite and
+      -- registers nothing against the .configs API used below. Its default
+      -- branch IS "main", so this pin is load-bearing, not decoration.
+      { "nvim-treesitter/nvim-treesitter-textobjects", branch = "master" },
+    },
     init = function()
       local configs = require("nvim-treesitter.configs")
       configs.setup({
@@ -63,6 +70,50 @@ return {
         sync_install = false,
         highlight = { enable = true },
         indent = { enable = true },
+        -- Only `move` and `swap`. The `a`/`i` select textobjects (vaf, vif,
+        -- vac, ...) come from mini.ai instead -- see plugins/mini-ai.lua for
+        -- why, and note that mini.ai still reads this plugin's queries.
+        textobjects = {
+          move = {
+            enable = true,
+            -- record the pre-jump position, so <C-o> comes back
+            set_jumps = true,
+            -- ]c/[c are deliberately absent: gitsigns already owns those for
+            -- hunk navigation (plugins/git.lua), so class jumps take ]C/[C.
+            -- ]a/[a shadow the built-in argument-list :next/:previous, which
+            -- nothing here uses; "a for argument" matches the swap keys below.
+            goto_next_start = {
+              ["]f"] = { query = "@function.outer", desc = "Next function" },
+              ["]C"] = { query = "@class.outer", desc = "Next class" },
+              ["]a"] = { query = "@parameter.inner", desc = "Next parameter" },
+            },
+            goto_next_end = {
+              ["]F"] = { query = "@function.outer", desc = "Next function end" },
+            },
+            goto_previous_start = {
+              ["[f"] = { query = "@function.outer", desc = "Prev function" },
+              ["[C"] = { query = "@class.outer", desc = "Prev class" },
+              ["[a"] = { query = "@parameter.inner", desc = "Prev parameter" },
+            },
+            goto_previous_end = {
+              ["[F"] = { query = "@function.outer", desc = "Prev function end" },
+            },
+          },
+          -- reorder arguments in place, without a yank/paste round trip
+          swap = {
+            enable = true,
+            swap_next = {
+              ["<leader>a"] = { query = "@parameter.inner", desc = "Swap parameter next" },
+            },
+            swap_previous = {
+              ["<leader>A"] = { query = "@parameter.inner", desc = "Swap parameter prev" },
+            },
+          },
+          -- The `repeatable_move` submodule (";"/"," repeating the jumps
+          -- above) is left off on purpose: it works by remapping f/F/t/T,
+          -- which eyeliner.nvim already owns (plugins/motions.lua). Taking
+          -- those would kill its per-character hints.
+        },
       })
       vim.treesitter.language.register("bash", "zsh")
       require("config.treesitter-query-fix").apply()
