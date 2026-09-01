@@ -9,7 +9,7 @@ return {
   },
   keys = {
     { "<leader>tt", function() require("neotest").run.run() end,                     desc = "Test nearest", mode = { "n", "v" } },
-    { "<leader>tc", function() require("neotest").run.run(vim.fn.expand("%")) end,   desc = "Test file",    mode = { "n", "v" } },
+    { "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%")) end,   desc = "Test file",    mode = { "n", "v" } },
     { "<leader>ta", function() require("neotest").run.run(vim.uv.cwd()) end,         desc = "Test all",     mode = { "n", "v" } },
     { "<leader>to", function() require("neotest").summary.toggle() end,              desc = "Test summary", mode = { "n", "v" } },
     { "<leader>tO", function() require("neotest").output.open({ enter = true }) end, desc = "Test output",  mode = { "n", "v" } },

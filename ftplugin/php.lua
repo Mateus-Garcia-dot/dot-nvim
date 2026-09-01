@@ -66,13 +66,17 @@ local function toggle_test()
   end
 
   local search_term = name:match("Test$") and name:gsub("Test$", "") or (name .. "Test")
-  local root = require("config.project").root()
 
-  require("telescope.builtin").find_files({
-    cwd = root,
-    default_text = search_term,
-    prompt_title = "Find " .. search_term,
-  })
+  -- php resolves the name from the enclosing *class* rather than the
+  -- filename (a file can hold more than one), then hands off to the shared
+  -- locate-and-jump used by every other filetype.
+  require("config.test-toggle").jump({ search_term .. ".php" }, search_term)
 end
 
-vim.keymap.set({ "n", "v" }, "<leader>pt", toggle_test, { buffer = true, desc = "Toggle class/test" })
+-- <leader>tc is the primary key (it belongs with the other test bindings);
+-- <leader>pt stays as an alias, since it's what Doom binds this to.
+-- Both are buffer-local, so they only exist in php buffers -- neotest's
+-- "Test file" moved off tc to tf to make room.
+for _, lhs in ipairs({ "<leader>tc", "<leader>pt" }) do
+  vim.keymap.set({ "n", "v" }, lhs, toggle_test, { buffer = true, desc = "Toggle class/test" })
+end

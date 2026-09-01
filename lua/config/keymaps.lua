@@ -36,6 +36,15 @@ set({ 'n', 'v' }, '<leader>!.', function()
   end)
 end, { desc = "Run shell command here" })
 
+-- projectile-toggle-between-implementation-and-test equivalent. Global, so it
+-- works in python/ts/ruby/etc; php shadows both keys with a buffer-local
+-- version in ftplugin/php.lua that keys off the class name instead.
+for _, lhs in ipairs({ '<leader>tc', '<leader>pt' }) do
+  set({ 'n', 'v' }, lhs, function()
+    require("config.test-toggle").toggle()
+  end, { desc = "Toggle source/test" })
+end
+
 -- org-present equivalent
 set({ 'n', 'v' }, '<leader>op', "<cmd>Neorg presenter start<cr>", { desc = "Present" })
 
