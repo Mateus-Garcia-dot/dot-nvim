@@ -23,7 +23,6 @@ local ensure_installed = {
 
 local config = function()
   local capabilities = require("blink.cmp").get_lsp_capabilities()
-  local telescope_builtin = require("telescope.builtin")
 
   -- Watchman scales to large repos better than libuv's recursive fs_event;
   -- falls back to nvim's default (capability disabled) if not installed.
@@ -106,11 +105,11 @@ local config = function()
       local opts = { buffer = event.buf }
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "gd", telescope_builtin.lsp_definitions, opts)
+      vim.keymap.set("n", "gd", function() require("snacks").picker.lsp_definitions() end, opts)
       vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-      vim.keymap.set("n", "gi", telescope_builtin.lsp_implementations, opts)
-      vim.keymap.set("n", "go", telescope_builtin.lsp_type_definitions, opts)
-      vim.keymap.set("n", "gr", telescope_builtin.lsp_references, opts)
+      vim.keymap.set("n", "gi", function() require("snacks").picker.lsp_implementations() end, opts)
+      vim.keymap.set("n", "go", function() require("snacks").picker.lsp_type_definitions() end, opts)
+      vim.keymap.set("n", "gr", function() require("snacks").picker.lsp_references() end, opts)
       vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, opts)
       vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
       vim.keymap.set({ "n", "x" }, "<F3>", function() vim.lsp.buf.format({ async = true }) end, opts)
@@ -126,11 +125,11 @@ local config = function()
       vim.keymap.set({ "n", "v" }, "<leader>ld", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
       vim.keymap.set({ "n", "v" }, "<leader>le", vim.diagnostic.open_float, opts)
       vim.keymap.set({ "n", "v" }, "<leader>lh", vim.lsp.buf.hover, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgd", telescope_builtin.lsp_definitions, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgd", function() require("snacks").picker.lsp_definitions() end, opts)
       vim.keymap.set({ "n", "v" }, "<leader>lgD", vim.lsp.buf.declaration, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgi", telescope_builtin.lsp_implementations, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgy", telescope_builtin.lsp_type_definitions, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgr", telescope_builtin.lsp_references, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgi", function() require("snacks").picker.lsp_implementations() end, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgy", function() require("snacks").picker.lsp_type_definitions() end, opts)
+      vim.keymap.set({ "n", "v" }, "<leader>lgr", function() require("snacks").picker.lsp_references() end, opts)
     end,
   })
 
@@ -201,7 +200,7 @@ return {
       -- must be loaded before config() below runs: capabilities come from it
       "saghen/blink.cmp",
       "rafamadriz/friendly-snippets",
-      "nvim-telescope/telescope.nvim",
+      "folke/snacks.nvim",
     },
     lazy = false,
     config = config,

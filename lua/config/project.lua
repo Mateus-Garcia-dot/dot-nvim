@@ -1,10 +1,9 @@
--- Shared project-root helper, backed by project.nvim's detection
--- (pattern/lsp based) instead of a bare .git lookup.
+-- Shared project-root helper, backed by snacks.nvim's git-root detection
+-- (same .git-pattern behavior project.nvim used, minus the extra plugin).
 local M = {}
 
 function M.root()
-  local root = require("project_nvim.project").get_project_root()
-  return root or vim.uv.cwd()
+  return require("snacks").git.get_root() or vim.uv.cwd()
 end
 
 return M

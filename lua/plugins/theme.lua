@@ -1,8 +1,15 @@
 local on_highlights = function (h1, c)
-  h1.TelescopeNormal = {
+  -- snacks.picker's floating windows use SnacksNormal/SnacksNormalNC (not a
+  -- picker-specific group) for their background -- this replaces telescope's
+  -- TelescopeNormal override now that snacks.picker is the fuzzy finder.
+  h1.SnacksNormal = {
     fg = c.fg_dark,
   }
-  vim.api.nvim_set_hl(0, "TelescopeNormal", { bg="none" })
+  h1.SnacksNormalNC = {
+    fg = c.fg_dark,
+  }
+  vim.api.nvim_set_hl(0, "SnacksNormal", { bg="none" })
+  vim.api.nvim_set_hl(0, "SnacksNormalNC", { bg="none" })
 end
 
 
