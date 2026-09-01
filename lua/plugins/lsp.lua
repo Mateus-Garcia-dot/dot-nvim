@@ -137,7 +137,6 @@ local config = function()
   mason_lspconfig.setup({ ensure_installed = ensure_installed })
 
   vim.lsp.config('standardrb', { capabilities = capabilities })
-  vim.lsp.config('jsonls', { capabilities = capabilities })
   vim.lsp.config('cssls', { capabilities = capabilities })
   vim.lsp.config('html', { capabilities = capabilities })
   vim.lsp.config('ts_ls', { capabilities = capabilities })
@@ -146,7 +145,6 @@ local config = function()
   vim.lsp.config('marksman', { capabilities = capabilities })
   vim.lsp.config('tailwindcss', { capabilities = capabilities })
   vim.lsp.config('ansiblels', { capabilities = capabilities })
-  vim.lsp.config('yamlls', { capabilities = capabilities })
   vim.lsp.config('elixirls', { capabilities = capabilities })
   vim.lsp.config('docker_compose_language_service', { capabilities = capabilities })
   vim.lsp.config('dockerls', { capabilities = capabilities })
@@ -162,6 +160,36 @@ local config = function()
         diagnostics = {
           globals = { "vim", "describe", "it", "before_each", "after_each" },
         },
+      },
+    },
+  })
+
+  -- jsonls/yamlls both ship with zero schemas by default, so package.json,
+  -- tsconfig.json, .eslintrc, docker-compose.yml and GitHub Actions
+  -- workflows were being treated as anonymous JSON/YAML -- no completion, no
+  -- validation, no hover docs on keys. SchemaStore.nvim is a data-only
+  -- plugin that vendors the schemastore.org catalog, so this needs no
+  -- network access at runtime.
+  vim.lsp.config('jsonls', {
+    capabilities = capabilities,
+    settings = {
+      json = {
+        schemas = require('schemastore').json.schemas(),
+        validate = { enable = true },
+      },
+    },
+  })
+
+  vim.lsp.config('yamlls', {
+    capabilities = capabilities,
+    settings = {
+      yaml = {
+        -- yamlls has its own SchemaStore client, which would register every
+        -- schema a second time (and fetch the catalog over HTTP on each
+        -- start). Turn it off and let the vendored copy above be the only
+        -- source.
+        schemaStore = { enable = false, url = "" },
+        schemas = require('schemastore').yaml.schemas(),
       },
     },
   })
@@ -201,6 +229,10 @@ return {
       "saghen/blink.cmp",
       "rafamadriz/friendly-snippets",
       "folke/snacks.nvim",
+      -- likewise: config() calls require("schemastore") directly. Pure data,
+      -- no setup() -- `version = false` because upstream's newest tag is
+      -- years behind the schema catalog on the default branch.
+      { "b0o/SchemaStore.nvim", version = false },
     },
     lazy = false,
     config = config,
