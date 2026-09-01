@@ -22,7 +22,7 @@ local ensure_installed = {
 }
 
 local config = function()
-  local capabilities = require("cmp_nvim_lsp").default_capabilities()
+  local capabilities = require("blink.cmp").get_lsp_capabilities()
   local telescope_builtin = require("telescope.builtin")
 
   -- Watchman scales to large repos better than libuv's recursive fs_event;
@@ -188,44 +188,6 @@ local config = function()
     'taplo',
     'rust_analyzer',
   })
-
-  require("luasnip.loaders.from_vscode").lazy_load()
-
-  local cmp = require("cmp")
-  local lspkind = require("lspkind")
-  cmp.setup({
-    sources = {
-      { name = "nvim_lsp" },
-      { name = "luasnip" },
-      { name = "vim-dadbod-completion", priority = 700 },
-    },
-    formatting = {
-      format = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 }),
-    },
-    mapping = cmp.mapping.preset.insert({
-      ["<CR>"] = cmp.mapping.confirm({ select = true }),
-      ["<C-Space>"] = cmp.mapping.complete(),
-      ["<Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        else
-          fallback()
-        end
-      end),
-      ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        else
-          fallback()
-        end
-      end),
-    }),
-    snippet = {
-      expand = function(args)
-        require("luasnip").lsp_expand(args.body)
-      end,
-    },
-  })
 end
 
 return {
@@ -236,12 +198,9 @@ return {
     dependencies = {
       "mason-org/mason-lspconfig.nvim",
       "neovim/nvim-lspconfig",
-      "hrsh7th/nvim-cmp",
-      "hrsh7th/cmp-nvim-lsp",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
+      -- must be loaded before config() below runs: capabilities come from it
+      "saghen/blink.cmp",
       "rafamadriz/friendly-snippets",
-      "onsails/lspkind.nvim",
       "nvim-telescope/telescope.nvim",
     },
     lazy = false,
