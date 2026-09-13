@@ -14,7 +14,6 @@ return {
             icon_preset = "diamond",
           },
         },
-        -- org-present equivalent: `:Neorg presenter start` (bound to <leader>op)
         ["core.presenter"] = {
           config = {
             zen_mode = "zen-mode",

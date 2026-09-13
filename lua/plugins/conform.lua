@@ -16,7 +16,6 @@ local config = function()
       fish = { "fish_indent" },
       sh = { "shfmt" },
       yaml = { "yamlfmt" },
-      -- ruby = { "standardrb" }, --currently broken, see autocmds.lua for workaround
     },
   })
   vim.api.nvim_create_user_command("Format", function(args)
