@@ -12,7 +12,15 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 
 -- set numbering
+vim.opt.number = true
 vim.opt.relativenumber = true
+
+-- keep undo history across sessions (~/.local/state/nvim/undo)
+vim.opt.undofile = true
+
+-- keep some context above/below the cursor instead of scrolling right to
+-- the window edge
+vim.opt.scrolloff = 8
 
 -- always reserve one signcolumn (diagnostics, gitsigns) so text doesn't
 -- jump sideways when a sign appears/disappears
