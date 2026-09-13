@@ -14,74 +14,15 @@ local ensure_installed = {
   "pylsp",
   "jsonls",
   "lua_ls",
-  "standardrb",
   "tailwindcss",
   "ts_ls",
-  "volar",
-  "elixir-ls",
+  "elixirls",
 }
 
 local config = function()
   local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-  -- Watchman scales to large repos better than libuv's recursive fs_event;
-  -- falls back to nvim's default (capability disabled) if not installed.
-  local watchman_available = vim.fn.executable("watchman-wait") == 1
-  if watchman_available then
-    local watchfiles = require("vim.lsp._watchfiles")
-    local watch = require("vim._watch")
-    local uv = vim.uv
-
-    watchfiles._watchfunc = function(path, opts, callback)
-      opts = opts or {}
-      path = vim.fs.normalize(path)
-
-      local function skip(fullpath)
-        if opts.include_pattern and opts.include_pattern:match(fullpath) == nil then
-          return true
-        end
-        if opts.exclude_pattern and opts.exclude_pattern:match(fullpath) ~= nil then
-          return true
-        end
-        return false
-      end
-
-      local buf = ""
-      local obj = vim.system({ "watchman-wait", "--relative", path, "--max-events", "0", path }, {
-        stdout = function(err, data)
-          if err or not data then
-            return
-          end
-          buf = buf .. data
-          local lines = vim.split(buf, "\n", { plain = true })
-          buf = table.remove(lines) or ""
-          for _, line in ipairs(lines) do
-            if line ~= "" then
-              local fullpath = vim.fs.normalize(vim.fs.joinpath(path, line))
-              if not skip(fullpath) then
-                uv.fs_stat(fullpath, function(_, stat)
-                  local change_type = stat and watch.FileChangeType.Changed or watch.FileChangeType.Deleted
-                  callback(fullpath, change_type)
-                end)
-              end
-            end
-          end
-        end,
-        stderr = function(err, data)
-          if not err and data and #vim.trim(data) > 0 then
-            vim.schedule(function()
-              vim.notify("watchman-wait: " .. data, vim.log.levels.ERROR)
-            end)
-          end
-        end,
-      })
-
-      return function()
-        obj:kill(2)
-      end
-    end
-  end
-
+  local watchman_available = require("config.lsp-watchman").apply()
   capabilities.workspace = capabilities.workspace or {}
   capabilities.workspace.didChangeWatchedFiles = { dynamicRegistration = watchman_available }
 
@@ -104,54 +45,48 @@ local config = function()
     callback = function(event)
       local opts = { buffer = event.buf }
 
-      vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-      vim.keymap.set("n", "gd", function() require("snacks").picker.lsp_definitions() end, opts)
-      vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-      vim.keymap.set("n", "gi", function() require("snacks").picker.lsp_implementations() end, opts)
-      vim.keymap.set("n", "go", function() require("snacks").picker.lsp_type_definitions() end, opts)
-      vim.keymap.set("n", "gr", function() require("snacks").picker.lsp_references() end, opts)
-      vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, opts)
-      vim.keymap.set("n", "<F2>", vim.lsp.buf.rename, opts)
-      vim.keymap.set({ "n", "x" }, "<F3>", function() vim.lsp.buf.format({ async = true }) end, opts)
-      vim.keymap.set("n", "<F4>", vim.lsp.buf.code_action, opts)
-      vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
-      vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-      vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-
-      -- <leader>l mirror of the keys above, for eglot-style muscle memory
-      vim.keymap.set({ "n", "v" }, "<leader>lr", vim.lsp.buf.rename, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>la", vim.lsp.buf.code_action, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>ld", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", opts)
-      vim.keymap.set({ "n", "v" }, "<leader>le", vim.diagnostic.open_float, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lh", vim.lsp.buf.hover, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgd", function() require("snacks").picker.lsp_definitions() end, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgD", vim.lsp.buf.declaration, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgi", function() require("snacks").picker.lsp_implementations() end, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgy", function() require("snacks").picker.lsp_type_definitions() end, opts)
-      vim.keymap.set({ "n", "v" }, "<leader>lgr", function() require("snacks").picker.lsp_references() end, opts)
+      -- bare key on the left, <leader>l... eglot-style mirror on the right;
+      -- a couple (gs/[d/]d, <leader>ld) only exist on one side
+      local maps = {
+        { bare = "K", leader = "lh", action = vim.lsp.buf.hover },
+        { bare = "gd", leader = "lgd", action = function() require("snacks").picker.lsp_definitions() end },
+        { bare = "gD", leader = "lgD", action = vim.lsp.buf.declaration },
+        { bare = "gi", leader = "lgi", action = function() require("snacks").picker.lsp_implementations() end },
+        { bare = "go", leader = "lgy", action = function() require("snacks").picker.lsp_type_definitions() end },
+        { bare = "gr", leader = "lgr", action = function() require("snacks").picker.lsp_references() end },
+        { bare = "gs", action = vim.lsp.buf.signature_help },
+        { bare = "<F2>", leader = "lr", action = vim.lsp.buf.rename },
+        { bare = "<F3>", bare_modes = { "n", "x" }, leader = "lf", action = function() vim.lsp.buf.format({ async = true }) end },
+        { bare = "<F4>", leader = "la", action = vim.lsp.buf.code_action },
+        { bare = "gl", leader = "le", action = vim.diagnostic.open_float },
+        { bare = "[d", action = vim.diagnostic.goto_prev },
+        { bare = "]d", action = vim.diagnostic.goto_next },
+        { leader = "ld", action = "<cmd>Trouble diagnostics toggle filter.buf=0<cr>" },
+      }
+      for _, m in ipairs(maps) do
+        if m.bare then
+          vim.keymap.set(m.bare_modes or "n", m.bare, m.action, opts)
+        end
+        if m.leader then
+          vim.keymap.set({ "n", "v" }, "<leader>" .. m.leader, m.action, opts)
+        end
+      end
     end,
   })
 
   mason.setup(mason_opts)
   mason_lspconfig.setup({ ensure_installed = ensure_installed })
 
-  vim.lsp.config('standardrb', { capabilities = capabilities })
-  vim.lsp.config('cssls', { capabilities = capabilities })
-  vim.lsp.config('html', { capabilities = capabilities })
-  vim.lsp.config('ts_ls', { capabilities = capabilities })
-  vim.lsp.config('emmet_ls', { capabilities = capabilities })
-  vim.lsp.config('volar', { capabilities = capabilities })
-  vim.lsp.config('marksman', { capabilities = capabilities })
-  vim.lsp.config('tailwindcss', { capabilities = capabilities })
-  vim.lsp.config('ansiblels', { capabilities = capabilities })
-  vim.lsp.config('elixirls', { capabilities = capabilities })
-  vim.lsp.config('docker_compose_language_service', { capabilities = capabilities })
-  vim.lsp.config('dockerls', { capabilities = capabilities })
-  vim.lsp.config('pylsp', { capabilities = capabilities })
-  vim.lsp.config('phpactor', { capabilities = capabilities })
-  vim.lsp.config('taplo', { capabilities = capabilities })
-  vim.lsp.config('rust_analyzer', { capabilities = capabilities })
+  -- servers that need nothing beyond capabilities; anything with its own
+  -- settings (lua_ls, jsonls, yamlls, bashls) is configured separately below
+  local plain_servers = {
+    'standardrb', 'cssls', 'html', 'ts_ls', 'emmet_ls', 'volar', 'marksman',
+    'tailwindcss', 'ansiblels', 'elixirls', 'docker_compose_language_service',
+    'dockerls', 'pylsp', 'phpactor', 'taplo', 'rust_analyzer',
+  }
+  for _, server in ipairs(plain_servers) do
+    vim.lsp.config(server, { capabilities = capabilities })
+  end
 
   vim.lsp.config('lua_ls', {
     capabilities = capabilities,
@@ -205,13 +140,10 @@ local config = function()
   -- html, jsonls, lua_ls, tailwindcss, ts_ls, pylsp). Only enable the
   -- servers here that are NOT Mason-managed on this machine.
   vim.lsp.enable({
-    'standardrb',
-    'volar',
     'marksman',
     'ansiblels',
     'yamlls',
     'elixirls',
-    'phpactor',
     'taplo',
     'rust_analyzer',
   })
@@ -219,19 +151,13 @@ end
 
 return {
   {
-    -- williamboman/mason.nvim redirects here; the project transferred to the
-    -- mason-org GitHub org.
     "mason-org/mason.nvim",
     dependencies = {
       "mason-org/mason-lspconfig.nvim",
       "neovim/nvim-lspconfig",
-      -- must be loaded before config() below runs: capabilities come from it
       "saghen/blink.cmp",
       "rafamadriz/friendly-snippets",
       "folke/snacks.nvim",
-      -- likewise: config() calls require("schemastore") directly. Pure data,
-      -- no setup() -- `version = false` because upstream's newest tag is
-      -- years behind the schema catalog on the default branch.
       { "b0o/SchemaStore.nvim", version = false },
     },
     lazy = false,
