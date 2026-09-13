@@ -2,8 +2,7 @@
 -- telescope has had slow maintenance stretches historically, and
 -- snacks.picker ships its own fast native-Lua fzf-syntax matcher (no
 -- separate build step/native dependency needed) -- while also being the
--- plugin already pulled in for claudecode.nvim's notifications and
--- config/project.lua's root detection.
+-- plugin already pulled in for config/project.lua's root detection.
 local project_root = require("config.project").root
 
 local config = function(_, opts)
