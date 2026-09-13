@@ -22,6 +22,13 @@ local ensure_installed = {
 local config = function()
   local capabilities = require("blink.cmp").get_lsp_capabilities()
 
+  -- show the full diagnostic message on its own line below the cursor's
+  -- line, instead of (or in addition to) the truncated end-of-line text
+  vim.diagnostic.config({
+    virtual_text = false,
+    virtual_lines = { current_line = true },
+  })
+
   local watchman_available = require("config.lsp-watchman").apply()
   capabilities.workspace = capabilities.workspace or {}
   capabilities.workspace.didChangeWatchedFiles = { dynamicRegistration = watchman_available }
