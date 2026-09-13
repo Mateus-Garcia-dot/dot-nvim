@@ -1,8 +1,14 @@
--- Reuses the vscode-php-debug adapter built by ~/.config/dot-emacs's makefile
--- (`make dap-php`) instead of installing a second copy via mason.
+-- Uses Mason's php-debug-adapter package (xdebug/vscode-php-debug) so this
+-- config no longer depends on ~/.config/dot-emacs's makefile build.
 local M = {}
 
-M.adapter_path = vim.fn.expand("~/.config/dot-emacs/.lsp-servers/vscode-php-debug/out/phpDebug.js")
+local function adapter_path()
+  local registry = require("mason-registry")
+  if not registry.is_installed("php-debug-adapter") then
+    return nil
+  end
+  return registry.get_package("php-debug-adapter"):get_install_path() .. "/extension/out/phpDebug.js"
+end
 
 -- Call from a project-local config (exrc / .nvim.lua) to register a debug
 -- config NAME mapping the container's /app to LOCAL_ROOT, e.g.:
@@ -22,10 +28,10 @@ function M.add_project(name, local_root)
 end
 
 function M.setup()
-  if vim.fn.filereadable(M.adapter_path) == 0 then
+  local path = adapter_path()
+  if not path then
     vim.notify(
-      "vscode-php-debug adapter not found at " .. M.adapter_path ..
-      " -- run `make dap-php` in ~/.config/dot-emacs to build it.",
+      "php-debug-adapter not installed -- run `:MasonInstall php-debug-adapter`.",
       vim.log.levels.WARN
     )
     return
@@ -34,7 +40,7 @@ function M.setup()
   require("dap").adapters.php = {
     type = "executable",
     command = "node",
-    args = { M.adapter_path },
+    args = { path },
   }
 end
 
