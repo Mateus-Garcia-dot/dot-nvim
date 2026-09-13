@@ -1,5 +1,4 @@
 local set = vim.keymap.set
-local project_root = require("config.project").root
 
 set({ 'n', 'v' }, '+', '"+', { silent = true })
 
@@ -16,25 +15,8 @@ set({ 'n', 'v' }, '<leader>wd', '<C-w>c', { desc = "Delete window" })
 
 -- dired-jump equivalent: Oil at the current file's directory, not cwd
 set({ 'n', 'v' }, '<leader>fj', function()
-  require("oil").open(vim.fn.expand("%:p:h"))
+  require("oil").open()
 end, { desc = "Jump to file's directory" })
-
--- shell-command equivalents
-set({ 'n', 'v' }, '<leader>!!', function()
-  vim.ui.input({ prompt = "Run in root: " }, function(cmd)
-    if cmd and cmd ~= "" then
-      vim.cmd(("TermExec cmd=%s dir=%s"):format(vim.fn.shellescape(cmd), vim.fn.shellescape(project_root())))
-    end
-  end)
-end, { desc = "Run shell command in project root" })
-
-set({ 'n', 'v' }, '<leader>!.', function()
-  vim.ui.input({ prompt = "$ " }, function(cmd)
-    if cmd and cmd ~= "" then
-      vim.cmd("!" .. cmd)
-    end
-  end)
-end, { desc = "Run shell command here" })
 
 -- projectile-toggle-between-implementation-and-test equivalent. Global, so it
 -- works in python/ts/ruby/etc; php shadows both keys with a buffer-local
