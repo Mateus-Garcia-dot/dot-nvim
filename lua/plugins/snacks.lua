@@ -51,6 +51,10 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
+    -- cmdheight=0 (options.lua) hides the message area, so a plain
+    -- vim.notify (e.g. "client quit with exit code 1") would otherwise
+    -- vanish unseen. snacks overrides vim.notify once enabled.
+    notifier = { enabled = true },
     picker = {
       enabled = true,
       sources = {
