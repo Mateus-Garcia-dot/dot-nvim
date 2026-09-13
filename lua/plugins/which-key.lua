@@ -13,6 +13,7 @@ return {
       { "<leader>t", group = "test" },
       { "<leader>T", group = "terminal" },
       { "<leader>d", group = "debug" },
+      { "<leader>r", group = "rest" },
       { "<leader>s", group = "spell" },
       { "<leader>w", group = "windows" },
       { "<leader>l", group = "lsp" },
