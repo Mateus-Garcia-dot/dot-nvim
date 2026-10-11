@@ -25,7 +25,10 @@ local config = function()
   -- line, instead of (or in addition to) the truncated end-of-line text
   vim.diagnostic.config({
     virtual_text = false,
-    virtual_lines = { current_line = true },
+    -- warnings and errors only: the lines push the text below them down, and
+    -- harper flags code words in nearly every comment as hints, so moving
+    -- through comments made the buffer jump on every line
+    virtual_lines = { current_line = true, severity = { min = vim.diagnostic.severity.WARN } },
   })
 
   -- '*' is merged into every server's config. blink.cmp's plugin/ file (it's
