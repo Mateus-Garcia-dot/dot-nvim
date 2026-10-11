@@ -40,6 +40,8 @@ local config = function()
     },
   })
 
+  require("config.lsp-progress").setup()
+
   local mason = require("mason")
   local mason_lspconfig = require("mason-lspconfig")
   -- module names stay "mason"/"mason-lspconfig" regardless of the org the
