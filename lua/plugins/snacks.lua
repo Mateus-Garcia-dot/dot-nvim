@@ -35,6 +35,66 @@ local config = function(_, opts)
     picker.buffers({ filter = { cwd = project_root() } })
   end, { desc = "Switch buffer in project" })
 
+  -- GitHub, via snacks' own `gh` CLI integration (forge/magit-forge
+  -- equivalent, no extra plugin): pickers are live, so typing in gh_pr
+  -- searches GitHub itself rather than filtering a fetched page -- which is
+  -- what makes it usable on a repo with six figures' worth of pull requests.
+  vim.keymap.set({ "n", "v" }, "<leader>gP", function() picker.gh_pr() end, { desc = "Pull requests" })
+  vim.keymap.set({ "n", "v" }, "<leader>gm", function()
+    picker.gh_pr({ author = "@me" })
+  end, { desc = "My pull requests" })
+  vim.keymap.set({ "n", "v" }, "<leader>gR", function()
+    picker.gh_pr({ search = "review-requested:@me draft:false" })
+  end, { desc = "Review queue" })
+  vim.keymap.set({ "n", "v" }, "<leader>gi", function() picker.gh_issue() end, { desc = "Issues" })
+
+  -- Title (Monday ID + description) and body (EBANX Code Review template)
+  -- built from the current branch by ebanx/pay's create-pr script; previews
+  -- before actually opening the PR.
+  vim.keymap.set({ "n", "v" }, "<leader>gc", function()
+    require("config.github").create_pr()
+  end, { desc = "Create PR" })
+
+  -- Actions (open in buffer, diff, review, comment, checkout) for the pull
+  -- request of the current branch -- no argument needed, it resolves via
+  -- `gh pr view`.
+  vim.keymap.set({ "n", "v" }, "<leader>gd", function() picker.gh_actions() end, { desc = "Current PR" })
+
+  -- ...and for the pull request that introduced the line under the cursor:
+  -- git blame gives the commit, GitHub resolves the commit to its PR. The
+  -- review thread there is usually where the reasoning lives.
+  vim.keymap.set({ "n", "v" }, "<leader>gw", function()
+    require("config.github").pr_for_line()
+  end, { desc = "Why is this line here?" })
+
+  -- Waits on the current branch's checks in the background (a `gh` process,
+  -- not a terminal tab) and reports through fidget plus terminal-notifier
+  -- when they settle.
+  vim.keymap.set({ "n", "v" }, "<leader>gW", function()
+    require("config.github").watch_checks()
+  end, { desc = "Watch PR checks" })
+
+  -- History, at two scopes
+  vim.keymap.set({ "n", "v" }, "<leader>gl", function() picker.git_log_file() end, { desc = "File history" })
+  vim.keymap.set({ "n", "v" }, "<leader>gL", function() picker.git_log_line() end, { desc = "Line history" })
+
+  -- Permalink to the cursor position (or, in visual mode, the selection).
+  -- gy yanks it (the `gh browse -n | pbcopy` equivalent, for pasting into
+  -- Slack or a review comment); go opens it. Both pin the commit rather than
+  -- the branch, so the link keeps pointing at these lines.
+  vim.keymap.set({ "n", "v" }, "<leader>gy", function()
+    require("snacks").gitbrowse({
+      what = "permalink",
+      open = function(url)
+        vim.fn.setreg("+", url)
+        vim.notify(url)
+      end,
+    })
+  end, { desc = "Yank permalink" })
+  vim.keymap.set({ "n", "v" }, "<leader>go", function()
+    require("snacks").gitbrowse({ what = "permalink" })
+  end, { desc = "Open permalink in browser" })
+
   vim.keymap.set({ "n", "v" }, "<leader>pk", function()
     local root = project_root()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
