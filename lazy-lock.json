@@ -17,6 +17,7 @@
   "mini.icons": { "branch": "main", "commit": "98faae31e9be1cc054ae63485e58ceb185efcad0" },
   "neogit": { "branch": "master", "commit": "5adc81b26232954cd7a90f158aa7844c18fc3165" },
   "neorg": { "branch": "main", "commit": "a09e0bb9b32e2d0406d4503ae8c1a7ad2ca83eae" },
+  "neorg-interim-ls": { "branch": "main", "commit": "898898f48fe7a2364d99d32f0dfd95dab5f8591f" },
   "neotest": { "branch": "master", "commit": "27bf921498043f7ecd821d6db68d05de244bbd02" },
   "neotest-phpunit": { "branch": "main", "commit": "40e53c4294726a16f34f1a383a94c570553c6d46" },
   "neotest-python": { "branch": "master", "commit": "1b56ca4ba51c6014f986d6548ee629bdc95589d1" },

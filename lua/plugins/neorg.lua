@@ -3,7 +3,15 @@ return {
     "nvim-neorg/neorg",
     lazy = false,
     version = "*",
-    dependencies = { "folke/zen-mode.nvim" },
+    dependencies = {
+      "folke/zen-mode.nvim",
+      -- core.completion only knows nvim-cmp / coq_nvim / nvim-compe natively,
+      -- none of which are installed since the move to blink. interim-ls is
+      -- the escape hatch neorg documents for that case: it exposes the same
+      -- completions through an in-process shim LSP, so blink's plain "lsp"
+      -- source picks them up with no neorg-specific glue.
+      "benlubas/neorg-interim-ls",
+    },
     -- core.integrations.treesitter probes package.cpath for the norg/norg_meta
     -- parsers, then falls back to `parser/<lang>.so` on the runtimepath. norg
     -- survives that only by accident -- treesitter.lua's auto_install fetched a
@@ -40,6 +48,22 @@ return {
         ["core.integrations.treesitter"] = {
           config = {
             warn_missing_parsers = false,
+          },
+        },
+        ["core.completion"] = {
+          config = {
+            engine = { module_name = "external.lsp-completion" },
+          },
+        },
+        ["external.interim-ls"] = {
+          config = {
+            completion_provider = {
+              enable = true,
+              documentation = true,
+              -- categories are a metadata field this config never fills in,
+              -- so they'd only pad the menu with empty suggestions.
+              categories = false,
+            },
           },
         },
         ["core.concealer"] = {
