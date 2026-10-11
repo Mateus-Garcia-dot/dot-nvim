@@ -3,20 +3,10 @@ local config = function()
   local conform = require("conform")
 
   conform.setup({
-    formatters_by_ft = {
-      javascript = { "prettierd", "eslint_d" },
-      typescript = { "prettierd", "eslint_d" },
-      javascriptreact = { "prettierd" },
-      typescriptreact = { "prettierd" },
-      python = { "ruff_fix", "ruff_format" },
-      json = { "prettierd" },
-      vue = { "prettierd", "eslint_d" },
-      lua = { "stylua" },
-      markdown = { "markdownlint-cli2" },
-      fish = { "fish_indent" },
-      sh = { "shfmt" },
-      yaml = { "yamlfmt" },
-    },
+    -- none configured: :Format falls back to the language server's own
+    -- formatting (lsp_format = "fallback" below) until a filetype gets an
+    -- entry here
+    formatters_by_ft = {},
   })
   vim.api.nvim_create_user_command("Format", function(args)
     local range = nil
