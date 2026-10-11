@@ -111,6 +111,9 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
+    -- vim.ui.input as a float (LSP rename on <F2>, ...) instead of the
+    -- cmdline, which cmdheight=0 would otherwise have to pop open for it
+    input = { enabled = true },
     -- cmdheight=0 (options.lua) hides the message area, so a plain
     -- vim.notify (e.g. "client quit with exit code 1") would otherwise
     -- vanish unseen. snacks overrides vim.notify once enabled.
