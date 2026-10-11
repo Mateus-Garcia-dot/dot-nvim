@@ -10,6 +10,7 @@ local ensure_installed = {
   "docker_compose_language_service",
   "dockerls",
   "emmet_ls",
+  "harper_ls",
   "html",
   "pylsp",
   "jsonls",
@@ -141,11 +142,69 @@ local config = function()
     filetypes = { 'sh', 'zsh' },
   })
 
+  -- Spelling/prose pair. typos-lsp wraps crate-ci/typos, which only reports a
+  -- word when it has a confident correction for it -- cheap enough and quiet
+  -- enough to run over every filetype. harper-ls is a full prose linter, so it
+  -- stays on prose filetypes only (see below).
+  --
+  -- typos-lsp takes init_options, not `settings`. A repo's own config file
+  -- (typos.toml / _typos.toml / .typos.toml, also a root marker) still wins
+  -- over anything set here, which is where per-project allowed words belong.
+  vim.lsp.config('typos_lsp', {
+    capabilities = capabilities,
+    -- deliberately no `filetypes`: nil means "attach to every filetype".
+    init_options = {
+      -- upstream default is "Info"; a real typo in an identifier or a doc is
+      -- worth a warning sign, and false positives are rare enough for that.
+      diagnosticSeverity = "Warning",
+    },
+    -- the server logs every document sync at info level otherwise
+    cmd_env = { RUST_LOG = "typos_lsp=error" },
+  })
+
+  -- harper is the actual spell checker of the two: it carries an English
+  -- dictionary, so it catches `lazzy`/`jumpd`/`fense` -- misspellings typos-lsp
+  -- has no entry for and therefore stays silent about. In code filetypes it
+  -- parses with treesitter and only lints comments and strings, so no
+  -- `filetypes` override here: upstream's list (php, ruby, python, lua, js,
+  -- ts, go, rust, sh, html, toml, c/cpp, ... plus markdown/gitcommit/tex) is
+  -- what we want. Anything NOT on that list would be linted as if the whole
+  -- file were prose, which is why widening it further is a bad idea.
+  vim.lsp.config('harper_ls', {
+    capabilities = capabilities,
+    filetypes = vim.list_extend(
+      vim.deepcopy(vim.lsp.config.harper_ls.filetypes),
+      -- upstream ships no plain-text entry, and `text` is what a stray .txt
+      -- or a `:setf text` scratch buffer lands on
+      { 'text' }
+    ),
+    settings = {
+      ["harper-ls"] = {
+        -- default on macOS is ~/Library/Application Support/harper-ls/
+        -- dictionary.txt; pointing it here means the words added via the
+        -- "add to dictionary" code action are version-controlled with the rest
+        -- of the config instead of being lost on the next machine.
+        userDictPath = vim.fn.stdpath("config") .. "/spell/harper-dictionary.txt",
+        dialect = "American",
+        diagnosticSeverity = "hint",
+        linters = {
+          -- style opinions rather than mistakes, and noisy on commit messages,
+          -- bullet lists and (sentence-case) headings. Every other linter --
+          -- SpellCheck, RepeatedWords, AnA, UnclosedQuotes... -- stays default.
+          LongSentences = false,
+          SentenceCapitalization = false,
+          UseTitleCase = false,
+        },
+      },
+    },
+  })
+
   -- mason-lspconfig's `automatic_enable` (on by default) already calls
   -- vim.lsp.enable() for anything actually installed via Mason (currently
   -- bashls, cssls, docker_compose_language_service, dockerls, emmet_ls,
-  -- html, jsonls, lua_ls, tailwindcss, ts_ls, pylsp). Only enable the
-  -- servers here that are NOT Mason-managed on this machine.
+  -- html, jsonls, lua_ls, tailwindcss, ts_ls, pylsp, and now harper_ls and
+  -- typos_lsp). Only enable the servers here that are NOT Mason-managed on
+  -- this machine.
   vim.lsp.enable({
     'marksman',
     'ansiblels',
