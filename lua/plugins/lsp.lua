@@ -203,6 +203,7 @@ local config = function()
     'elixirls',
     'taplo',
     'rust_analyzer',
+    'phpactor',
   })
 end
 
