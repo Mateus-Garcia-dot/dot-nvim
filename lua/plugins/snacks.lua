@@ -95,6 +95,10 @@ local config = function(_, opts)
     require("snacks").gitbrowse({ what = "permalink" })
   end, { desc = "Open permalink in browser" })
 
+  -- Undo history as a picker: fuzzy-find a past state with a diff preview,
+  -- <CR> restores it. undofile (options.lua) keeps it across sessions.
+  vim.keymap.set("n", "<leader>us", function() picker.undo() end, { desc = "Search undo history" })
+
   vim.keymap.set({ "n", "v" }, "<leader>pk", function()
     local root = project_root()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do

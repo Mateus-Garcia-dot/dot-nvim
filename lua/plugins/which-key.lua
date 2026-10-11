@@ -17,6 +17,7 @@ return {
       { "<leader>r", group = "rest" },
       { "<leader>s", group = "spell" },
       { "<leader>w", group = "windows" },
+      { "<leader>u", group = "undo" },
       { "<leader>l", group = "lsp" },
       { "<leader>lg", group = "goto" },
       { "<leader>!", group = "shell" },

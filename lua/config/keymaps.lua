@@ -27,6 +27,13 @@ for _, lhs in ipairs({ '<leader>tc', '<leader>pt' }) do
   end, { desc = "Toggle source/test" })
 end
 
+-- undo-tree-visualize equivalent, bundled with nvim 0.12 but opt-in.
+-- Moving the cursor in the tree window moves the buffer to that state.
+vim.cmd.packadd("nvim.undotree")
+set('n', '<leader>ut', function()
+  require("undotree").open({ command = "topleft 40vnew" })
+end, { desc = "Undo tree" })
+
 -- u / <C-r> without ui2 flashing "1 line less; before #12  3 seconds ago" on
 -- every press -- cmdheight=0 used to swallow it, and unlike the line-count
 -- messages (options.lua) no option controls it. A count still works: 3u.
