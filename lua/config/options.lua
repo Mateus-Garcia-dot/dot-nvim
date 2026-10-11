@@ -34,6 +34,18 @@ vim.opt.cmdheight = 0
 -- no wrap
 vim.o.wrap = false
 
+-- fold by syntax (methods, classes, blocks) from the treesitter folds
+-- queries nvim-treesitter installs; a buffer with no parser just gets no
+-- folds. Set globally rather than per buffer so it also covers buffers
+-- loaded off-screen (an LSP rename touching other files) -- core's foldexpr
+-- remembers "no parser here" after the first line, so that costs nothing.
+-- Files open fully unfolded; foldtext="" keeps a closed fold's first line
+-- syntax-highlighted.
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.o.foldlevelstart = 99
+vim.o.foldtext = ""
+
 -- never show the native tabline (defaults to appearing once there are 2+
 -- tabs); workspaces are switched via <leader>l1..9, no visible tab bar
 vim.o.showtabline = 0
