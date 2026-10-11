@@ -31,7 +31,30 @@ return {
         ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
       },
 
-      snippets = { preset = "default" },
+      snippets = {
+        preset = "default",
+        -- core's grammar only lets a placeholder hold plain text OR a single
+        -- nested node, never a mix, so `${1:a ${2:b}}` / `${4:raise $3}` --
+        -- valid LSP syntax, used all over friendly-snippets (php foreach /
+        -- function / class / try, python try/except, terraform...) -- dies
+        -- with "snippet parsing failed". On that failure, flatten nested
+        -- tabstops into their placeholder text, innermost first, and retry:
+        -- you lose the inner jump stops but still get the snippet.
+        expand = function(snippet)
+          local ok, err = pcall(vim.snippet.expand, snippet)
+          if ok then return end
+          local flat = snippet
+          while true do
+            local prev = flat
+            -- the [^\\] guards keep escaped `\$` (php variables) literal
+            flat = flat:gsub("(%${%d+:[^{}]-[^\\])%${%d+:([^{}]-)}", "%1%2")
+            flat = flat:gsub("(%${%d+:[^{}]-[^\\])%$%d+", "%1")
+            if flat == prev then break end
+            if pcall(vim.snippet.expand, flat) then return end
+          end
+          error(err, 0)
+        end,
+      },
 
       -- README says a Nerd Font is required; 'mono' is the variant whose
       -- icons are single-width, which is what keeps the menu aligned.
