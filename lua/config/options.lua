@@ -2,7 +2,7 @@
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- optionally enable 24-bit colour
+-- optionally enable 24-bit color
 vim.opt.termguicolors = true
 
 -- indent options
@@ -22,7 +22,7 @@ vim.opt.undofile = true
 -- the window edge
 vim.opt.scrolloff = 8
 
--- always reserve one signcolumn (diagnostics, gitsigns) so text doesn't
+-- always reserve one signcolumn (diagnostics, breakpoints) so text doesn't
 -- jump sideways when a sign appears/disappears
 vim.opt.signcolumn = "yes"
 
@@ -88,3 +88,4 @@ vim.cmd.language("en_US")
 -- see dot-emacs' equivalent .dir-locals.el convention) register DAP configs,
 -- test runners, etc. without touching this shared config.
 vim.o.exrc = true
+
