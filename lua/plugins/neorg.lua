@@ -1,7 +1,13 @@
 return {
   {
     "nvim-neorg/neorg",
-    lazy = false,
+    -- loads on the first .norg buffer (nvim detects the filetype itself) or
+    -- the first :Neorg command (<leader>op's presenter included) rather than
+    -- on every start -- ~20ms of a ~150ms startup. setup() boots neorg on the
+    -- spot, and lazy replays the FileType/BufRead events for that first
+    -- buffer, so it comes up concealed, highlighted and with completion.
+    ft = "norg",
+    cmd = "Neorg",
     version = "*",
     dependencies = {
       "folke/zen-mode.nvim",
