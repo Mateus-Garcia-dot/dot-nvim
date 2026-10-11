@@ -13,15 +13,15 @@ return {
       "benlubas/neorg-interim-ls",
     },
     -- core.integrations.treesitter probes package.cpath for the norg/norg_meta
-    -- parsers, then falls back to `parser/<lang>.so` on the runtimepath. norg
-    -- survives that only by accident -- treesitter.lua's auto_install fetched a
-    -- copy into nvim-treesitter/parser/ -- while norg_meta ships solely as the
-    -- tree-sitter-norg-meta luarocks rock, whose cpath entry isn't in place yet
-    -- when neorg loads. Hence "norg_meta parser was not found" on every start,
-    -- with metadata (@document.meta) parsing silently dead. Registering it by
-    -- explicit path here runs before require("neorg").setup() and sidesteps the
-    -- ordering entirely. The rock tree is globbed rather than read off
-    -- package.cpath because cpath is what's late in the first place.
+    -- parsers, then falls back to `parser/<lang>.so` on the runtimepath. Both
+    -- ship solely as luarocks rocks (tree-sitter-norg / tree-sitter-norg-meta;
+    -- nvim-treesitter's main branch doesn't offer norg at all), whose cpath
+    -- entries aren't in place yet when neorg loads. Hence "norg_meta parser was
+    -- not found" on every start, with metadata (@document.meta) parsing
+    -- silently dead. Registering them by explicit path here runs before
+    -- require("neorg").setup() and sidesteps the ordering entirely. The rock
+    -- tree is globbed rather than read off package.cpath because cpath is
+    -- what's late in the first place.
     init = function()
       local rocks = vim.fn.stdpath("data") .. "/lazy-rocks"
       for _, lang in ipairs({ "norg", "norg_meta" }) do
