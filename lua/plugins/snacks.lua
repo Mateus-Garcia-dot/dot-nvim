@@ -35,6 +35,29 @@ local config = function(_, opts)
     picker.buffers({ filter = { cwd = project_root() } })
   end, { desc = "Switch buffer in project" })
 
+  -- Doom muscle memory: SPC ' resumes the last search (vertico-repeat),
+  -- with its query and cursor position intact
+  vim.keymap.set({ "n", "v" }, "<leader>'", function() picker.resume() end, { desc = "Resume last search" })
+
+  -- SPC f r / SPC p r: recentf, everywhere and in this project
+  vim.keymap.set({ "n", "v" }, "<leader>fr", function() picker.recent() end, { desc = "Recent files" })
+  vim.keymap.set({ "n", "v" }, "<leader>pr", function()
+    picker.recent({ filter = { cwd = project_root() } })
+  end, { desc = "Recent files in project" })
+
+  -- SPC *: search the project for the word under the cursor (whole-word
+  -- match), or for the selection in visual mode
+  vim.keymap.set({ "n", "v" }, "<leader>*", function()
+    picker.grep_word({ cwd = project_root() })
+  end, { desc = "Search project for word" })
+
+  -- SPC s i: imenu -- jump to a method/class/function in this buffer; the
+  -- capital searches the whole workspace (any class in the repo, by name)
+  vim.keymap.set({ "n", "v" }, "<leader>si", function() picker.lsp_symbols() end, { desc = "Symbols in buffer" })
+  vim.keymap.set({ "n", "v" }, "<leader>sI", function()
+    picker.lsp_workspace_symbols()
+  end, { desc = "Symbols in workspace" })
+
   -- GitHub, via snacks' own `gh` CLI integration (forge/magit-forge
   -- equivalent, no extra plugin): pickers are live, so typing in gh_pr
   -- searches GitHub itself rather than filtering a fetched page -- which is

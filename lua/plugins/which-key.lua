@@ -15,7 +15,7 @@ return {
       { "<leader>T", group = "terminal" },
       { "<leader>d", group = "debug" },
       { "<leader>r", group = "rest" },
-      { "<leader>s", group = "spell" },
+      { "<leader>s", group = "spell/symbols" },
       { "<leader>w", group = "windows" },
       { "<leader>u", group = "undo" },
       { "<leader>l", group = "lsp" },
