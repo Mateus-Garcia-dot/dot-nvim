@@ -27,6 +27,16 @@ for _, lhs in ipairs({ '<leader>tc', '<leader>pt' }) do
   end, { desc = "Toggle source/test" })
 end
 
+-- u / <C-r> without ui2 flashing "1 line less; before #12  3 seconds ago" on
+-- every press -- cmdheight=0 used to swallow it, and unlike the line-count
+-- messages (options.lua) no option controls it. A count still works: 3u.
+set('n', 'u', function()
+  vim.cmd("silent normal! " .. vim.v.count1 .. "u")
+end, { desc = "Undo" })
+set('n', '<C-r>', function()
+  vim.cmd("silent normal! " .. vim.v.count1 .. vim.keycode("<C-r>"))
+end, { desc = "Redo" })
+
 -- org-present equivalent
 set({ 'n', 'v' }, '<leader>op', "<cmd>Neorg presenter start<cr>", { desc = "Present" })
 

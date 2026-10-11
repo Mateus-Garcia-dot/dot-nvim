@@ -31,6 +31,27 @@ vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 2
 vim.opt.cmdheight = 0
 
+-- nvim 0.12's experimental replacement for the message area and cmdline:
+-- no "Press ENTER" prompts, :messages opens in a real buffer, and (with
+-- cmdheight=0 above) :echo output and errors show in a small float at the
+-- bottom right for a few seconds instead of pushing the cmdline open.
+-- vim.notify still goes to snacks' notifier. A no-op in headless runs, so
+-- scripted `nvim --headless` output still reaches stdout. Delete this if it
+-- misbehaves -- it's still marked experimental.
+require("vim._core.ui2").enable({ msg = { targets = "msg" } })
+
+-- ...and keep that float for messages worth reading. With the legacy UI,
+-- cmdheight=0 silently swallowed routine chatter that ui2 now shows every
+-- time:
+-- - :w's `"file" 246L, 9136B written`: 0.12 sends it as a progress message,
+--   and an empty "progress:" keeps those out of the message area
+-- - "3 fewer lines" / "4 lines yanked" / "3 lines >ed" / ":s" counts:
+--   'report' is their line-count threshold, and 9999 is effectively never
+-- Undo/redo's "1 line less; before #12" has no option; keymaps.lua silences
+-- it on u / <C-r>. Errors, warnings and search counts still show.
+vim.o.messagesopt = (vim.o.messagesopt:gsub("progress:c", "progress:"))
+vim.o.report = 9999
+
 -- no wrap
 vim.o.wrap = false
 
