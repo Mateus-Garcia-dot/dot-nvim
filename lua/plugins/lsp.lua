@@ -21,8 +21,6 @@ local ensure_installed = {
 }
 
 local config = function()
-  local capabilities = require("blink.cmp").get_lsp_capabilities()
-
   -- show the full diagnostic message on its own line below the cursor's
   -- line, instead of (or in addition to) the truncated end-of-line text
   vim.diagnostic.config({
@@ -30,9 +28,17 @@ local config = function()
     virtual_lines = { current_line = true },
   })
 
+  -- '*' is merged into every server's config. blink.cmp's plugin/ file (it's
+  -- a dependency below, so it has already run) put its completion
+  -- capabilities there, and vim.lsp.config() deep-merges -- so this only
+  -- layers the file-watching flag on top, and no server needs its own
+  -- `capabilities`.
   local watchman_available = require("config.lsp-watchman").apply()
-  capabilities.workspace = capabilities.workspace or {}
-  capabilities.workspace.didChangeWatchedFiles = { dynamicRegistration = watchman_available }
+  vim.lsp.config('*', {
+    capabilities = {
+      workspace = { didChangeWatchedFiles = { dynamicRegistration = watchman_available } },
+    },
+  })
 
   local mason = require("mason")
   local mason_lspconfig = require("mason-lspconfig")
@@ -85,19 +91,7 @@ local config = function()
   mason.setup(mason_opts)
   mason_lspconfig.setup({ ensure_installed = ensure_installed })
 
-  -- servers that need nothing beyond capabilities; anything with its own
-  -- settings (lua_ls, jsonls, yamlls, bashls) is configured separately below
-  local plain_servers = {
-    'standardrb', 'cssls', 'html', 'ts_ls', 'emmet_ls', 'volar', 'marksman',
-    'tailwindcss', 'ansiblels', 'elixirls', 'docker_compose_language_service',
-    'dockerls', 'pylsp', 'phpactor', 'taplo', 'rust_analyzer',
-  }
-  for _, server in ipairs(plain_servers) do
-    vim.lsp.config(server, { capabilities = capabilities })
-  end
-
   vim.lsp.config('lua_ls', {
-    capabilities = capabilities,
     settings = {
       Lua = {
         diagnostics = {
@@ -114,7 +108,6 @@ local config = function()
   -- plugin that vendors the schemastore.org catalog, so this needs no
   -- network access at runtime.
   vim.lsp.config('jsonls', {
-    capabilities = capabilities,
     settings = {
       json = {
         schemas = require('schemastore').json.schemas(),
@@ -124,7 +117,6 @@ local config = function()
   })
 
   vim.lsp.config('yamlls', {
-    capabilities = capabilities,
     settings = {
       yaml = {
         -- yamlls has its own SchemaStore client, which would register every
@@ -138,7 +130,6 @@ local config = function()
   })
 
   vim.lsp.config('bashls', {
-    capabilities = capabilities,
     filetypes = { 'sh', 'zsh' },
   })
 
@@ -151,7 +142,6 @@ local config = function()
   -- (typos.toml / _typos.toml / .typos.toml, also a root marker) still wins
   -- over anything set here, which is where per-project allowed words belong.
   vim.lsp.config('typos_lsp', {
-    capabilities = capabilities,
     -- deliberately no `filetypes`: nil means "attach to every filetype".
     init_options = {
       -- upstream default is "Info"; a real typo in an identifier or a doc is
@@ -171,7 +161,6 @@ local config = function()
   -- what we want. Anything NOT on that list would be linted as if the whole
   -- file were prose, which is why widening it further is a bad idea.
   vim.lsp.config('harper_ls', {
-    capabilities = capabilities,
     filetypes = vim.list_extend(
       vim.deepcopy(vim.lsp.config.harper_ls.filetypes),
       -- upstream ships no plain-text entry, and `text` is what a stray .txt
