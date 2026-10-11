@@ -111,6 +111,11 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
+    -- files over 1.5MB, or whose lines average 1000+ chars (minified js, a
+    -- base64 fixture), open as filetype=bigfile: plain regex syntax, no
+    -- treesitter, no completion, no LSP (typos_lsp, the one server without a
+    -- `filetypes` list, opts out of it explicitly in lsp.lua).
+    bigfile = { enabled = true },
     -- vim.ui.input as a float (LSP rename on <F2>, ...) instead of the
     -- cmdline, which cmdheight=0 would otherwise have to pop open for it
     input = { enabled = true },

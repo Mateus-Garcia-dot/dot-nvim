@@ -145,6 +145,16 @@ local config = function()
   -- over anything set here, which is where per-project allowed words belong.
   vim.lsp.config('typos_lsp', {
     -- deliberately no `filetypes`: nil means "attach to every filetype".
+    -- Except snacks' bigfile buffers (filetype=bigfile, see snacks.lua),
+    -- which every other server's `filetypes` list already shuts out: a
+    -- root_dir function that never calls on_dir() is how a config opts out
+    -- of a buffer, and on_dir() with no argument still resolves the root
+    -- from root_markers as before.
+    root_dir = function(bufnr, on_dir)
+      if vim.bo[bufnr].filetype ~= "bigfile" then
+        on_dir()
+      end
+    end,
     init_options = {
       -- upstream default is "Info"; a real typo in an identifier or a doc is
       -- worth a warning sign, and false positives are rare enough for that.
