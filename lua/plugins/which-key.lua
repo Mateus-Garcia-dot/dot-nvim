@@ -10,6 +10,7 @@ return {
       { "<leader>x", group = "diagnostics" },
       { "<leader>c", group = "code" },
       { "<leader>g", group = "git" },
+      { "<leader>gh", group = "github" },
       { "<leader>t", group = "test" },
       { "<leader>T", group = "terminal" },
       { "<leader>d", group = "debug" },
