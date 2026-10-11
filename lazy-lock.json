@@ -8,6 +8,7 @@
   "eyeliner.nvim": { "branch": "main", "commit": "8f197eb30cecdf4c2cc9988a5eecc6bc34c0c7d6" },
   "friendly-snippets": { "branch": "main", "commit": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219" },
   "guess-indent.nvim": { "branch": "main", "commit": "84a4987ff36798c2fc1169cbaff67960aed9776f" },
+  "hardtime.nvim": { "branch": "main", "commit": "721a75b9a0c2eb1fb811d34507708ee315cb04eb" },
   "hererocks": { "branch": "master", "commit": "5d77b0bafc8b96f82355ca2ce5637c00d78a065c" },
   "kulala.nvim": { "branch": "main", "commit": "1517fd8779b5d83ef7064709a3a7d03e72a899bf" },
   "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
